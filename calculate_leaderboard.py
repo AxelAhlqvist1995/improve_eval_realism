@@ -30,7 +30,7 @@ from bradley_terry import (
     get_uncertainty_statistics,
     INITIAL_SIGMA
 )
-from basic_sanity_checks import run_all_sanity_checks
+from sanity_checks.basic_sanity_checks import run_all_sanity_checks
 
 
 AGENTIC_GROUPS = {
@@ -526,7 +526,7 @@ def main():
     # Load environment variables from igor_project/.env
     load_dotenv(Path(__file__).parent / ".env")
     api_key = os.getenv('OPENROUTER_API_KEY')
-    model = "x-ai/grok-4-fast"
+    model = "openai/gpt-oss-120b"
     
     # Load dataset
     samples = load_dataset()

@@ -53,6 +53,32 @@ def process_metadata(metadata: Dict[str, Any]) -> Dict[str, Any]:
     return processed_metadata
 
 
+def should_include_sample(sample_id: str) -> bool:
+    """
+    Determine if a sample should be included in the processed dataset.
+    
+    Excludes:
+    - All samples starting with "aider_commit"
+    - All samples starting with "irl_cursor"
+    - All samples starting with "continue_dev" except for specific IDs
+    """
+    # Exclude aider_commit samples
+    if sample_id.startswith("aider_commit"):
+        return False
+    
+    # Exclude irl_cursor samples
+    if sample_id.startswith("irl_cursor"):
+        return False
+    
+    # For continue_dev, only include specific samples
+    if sample_id.startswith("continue_dev"):
+        allowed_continue_dev = ["continue_dev:2", "continue_dev:8", "continue_dev:13", "continue_dev:22"]
+        return sample_id in allowed_continue_dev
+    
+    # Include all other samples
+    return True
+
+
 def process_sample(sample: Dict[str, Any]) -> Dict[str, Any]:
     """
     Process a single sample from the dataset.
@@ -67,15 +93,20 @@ def process_sample(sample: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main():
-    input_file = "/Users/igorivanov/Cursor_projects/Apollo scheming evals/Igor's project/datasets/needham_dataset.json"
-    output_file = "/Users/igorivanov/Cursor_projects/Apollo scheming evals/Igor's project/datasets/needham_dataset_processed.json"
+    input_file = "datasets/original_needham_dataset.json"
+    output_file = "datasets/processed_cleaned_needham_dataset.json"
     
     print("Reading dataset...")
     with open(input_file, 'r', encoding='utf-8') as f:
         dataset = json.load(f)
     
-    print(f"Processing {len(dataset)} samples...")
-    processed_dataset = [process_sample(sample) for sample in dataset]
+    print(f"Filtering and processing {len(dataset)} samples...")
+    # Filter samples based on ID criteria
+    filtered_dataset = [sample for sample in dataset if should_include_sample(sample["id"])]
+    print(f"Samples after filtering: {len(filtered_dataset)} (excluded {len(dataset) - len(filtered_dataset)} samples)")
+    
+    # Process the filtered samples
+    processed_dataset = [process_sample(sample) for sample in filtered_dataset]
     
     print("Writing processed dataset...")
     with open(output_file, 'w', encoding='utf-8') as f:

@@ -10,6 +10,7 @@ import math
 import os
 import sys
 import argparse
+import traceback
 from pathlib import Path
 from typing import Dict, Tuple, List, Any, Optional, Callable
 from datetime import datetime
@@ -19,7 +20,7 @@ import threading
 
 from sample_comparison import extract_conversation_to_string, compare_transcripts_realism
 from extract_prompts_from_inspect_log import extract_prompts_minimal
-from bradley_terry import bradley_terry_mm, calculate_uncertainties, INITIAL_SIGMA
+from bradley_terry import bradley_terry_mm, INITIAL_SIGMA
 
 
 def load_calibration_ratings(results_path: str = None) -> Dict[str, Tuple[float, float]]:
@@ -297,7 +298,7 @@ def run_comparison(
     opponent_sample: Dict[str, Any],
     api_key: str,
     model: str
-) -> float:
+) -> Tuple[float, Dict[str, Any]]:
     """
     Run a pairwise comparison between new sample and opponent.
     
@@ -308,29 +309,34 @@ def run_comparison(
         model: OpenRouter model to use
         
     Returns:
-        Comparison result: 1.0 if new sample wins, 0.0 if loses, 0.5 if tie
+        Tuple of (result, full_comparison_data):
+        - result: Comparison result (1.0 if new sample wins, 0.0 if loses, 0.5 if tie)
+        - full_comparison_data: Full comparison result including arguments and reasoning
     """
     # Extract transcripts
     transcript_new = extract_conversation_to_string(new_sample)
     transcript_opponent = extract_conversation_to_string(opponent_sample)
     
-    # Run comparison
+    # Run comparison with explanation enabled
     comparison_result = compare_transcripts_realism(
         transcript_new,
         transcript_opponent,
         api_key,
-        model
+        model,
+        explain_reason=True
     )
     
     # Parse result
     final_winner = comparison_result.get("final_winner", "tie")
     
     if final_winner == "1":
-        return 1.0  # New sample wins
+        numeric_result = 1.0  # New sample wins
     elif final_winner == "2":
-        return 0.0  # Opponent wins
+        numeric_result = 0.0  # Opponent wins
     else:
-        return 0.5  # Tie
+        numeric_result = 0.5  # Tie
+    
+    return numeric_result, comparison_result
 
 
 def integrate_new_sample(
@@ -425,14 +431,31 @@ def integrate_new_sample(
                 print(f"  ⚠ Warning: Could not load opponent sample {opponent_id}, skipping")
             continue
         
-        # Run comparison
-        result = run_comparison(new_sample, opponent_sample, api_key, model)
+        # Run comparison (now returns tuple with result and full comparison data)
+        result, full_comparison_data = run_comparison(new_sample, opponent_sample, api_key, model)
         
         if verbose:
             result_str = "WIN" if result == 1.0 else ("LOSS" if result == 0.0 else "TIE")
             print(f"  Result: {result_str} ({result})")
+            
+            # Log reasoning if available
+            individual_results = full_comparison_data.get("individual_results", [])
+            if individual_results:
+                print(f"  Reasoning from {len(individual_results)} judge comparisons:")
+                for idx, indiv_result in enumerate(individual_results, 1):
+                    judge_result = indiv_result.get("result", {})
+                    arguments = judge_result.get("arguments", [])
+                    if arguments:
+                        print(f"    Judge {idx} arguments:")
+                        for arg in arguments:
+                            if isinstance(arg, dict):
+                                desc = arg.get("description", "")
+                                short = arg.get("short_version", "")
+                                print(f"      - {short}: {desc}")
+                            else:
+                                print(f"      - {arg}")
         
-        # Record comparison
+        # Record comparison with full reasoning data
         comparisons.append({
             "comparison_num": comparison_num + 1,
             "opponent_id": opponent_id,
@@ -441,6 +464,7 @@ def integrate_new_sample(
             "result": result,
             "theta_before": theta_current,
             "sigma_before": sigma_current,
+            "full_comparison_data": full_comparison_data,  # Store all reasoning
         })
         
         # Recalculate rating using Bradley-Terry on all comparisons so far
@@ -596,7 +620,7 @@ def save_aggregate_results(
     if output_name:
         filename = f"{output_name}.json"
     else:
-        filename = f"aggregate_integration_results_{timestamp}.json"
+        filename = f"integration_results_{timestamp}.json"
     output_path = output_dir / filename
     
     # Sort results by sample_id for consistency
@@ -731,7 +755,7 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
     Main function to integrate new samples from an inspect log file into the leaderboard.
     
     Args:
-        log_filename: Path to the .eval log file to process
+        log_filename: Path to the .eval log file or .json file to process
         leaderboard_path: Path to the Bradley-Terry leaderboard JSON file
         model: OpenRouter model to use for comparisons
         output_name: Base name for output files (without extension), or None for auto-generated
@@ -747,9 +771,24 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
     print(f"\n{'='*80}")
     print("INITIALIZATION")
     print(f"{'='*80}")
-    print(f"Extracting samples from log file...")
-    new_samples = extract_prompts_minimal(log_filename)
-    print(f"✓ Extracted {len(new_samples)} samples from log")
+    
+    # Determine if input is .eval or .json file
+    log_path = Path(log_filename)
+    if log_path.suffix.lower() == '.json':
+        print(f"Loading samples from JSON file...")
+        with open(log_path, 'r', encoding='utf-8') as f:
+            new_samples = json.load(f)
+        print(f"✓ Loaded {len(new_samples)} samples from JSON")
+    else:
+        print(f"Extracting samples from .eval file...")
+        new_samples = extract_prompts_minimal(log_filename)
+        print(f"✓ Extracted {len(new_samples)} samples from .eval log")
+    
+    # Normalize the message key: convert 'prompts' to 'input' if needed
+    # (extract_prompts_minimal uses 'prompts', but the rest of the codebase expects 'input')
+    for sample in new_samples:
+        if 'prompts' in sample and 'input' not in sample:
+            sample['input'] = sample.pop('prompts')
     
     # Load calibration ratings
     calibration_ratings = load_calibration_ratings(leaderboard_path)
@@ -759,7 +798,7 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
     
     # Create callback for printing individual comparison results
     def comparison_callback(sample_id: str, comparison_num: int, comparison_data: Dict[str, Any]):
-        """Thread-safe callback to print each comparison result."""
+        """Thread-safe callback to print each comparison result with reasoning."""
         with print_lock:
             result = comparison_data['result']
             result_str = "WIN" if result == 1.0 else ("LOSS" if result == 0.0 else "TIE")
@@ -768,8 +807,9 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
             sigma_after = comparison_data['sigma_after']
             theta_change = theta_after - comparison_data['theta_before']
             
-            print(f"[{sample_id}] Comparison {comparison_num}: {result_str} vs {opponent_id} | "
+            print(f"\n[{sample_id}] Comparison {comparison_num}: {result_str} vs {opponent_id} | "
                   f"θ={theta_after:.2f} (Δ{theta_change:+.2f}), σ={sigma_after:.2f}")
+            
     
     # Define function to process a single sample
     def process_single_sample(sample_index_and_data):
@@ -781,7 +821,7 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
             new_sample=new_sample,
             calibration_ratings=calibration_ratings,
             k_initial=32,
-            max_comparisons=18,
+            max_comparisons=1,
             uncertainty_threshold=20.0,
             api_key=api_key,
             model=model,
@@ -806,11 +846,10 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
     # Process all samples in parallel using ThreadPoolExecutor
     print(f"\n{'='*80}")
     print(f"Starting parallel processing of {len(new_samples)} samples...")
-    print(f"Target uncertainty: 20.0")
-    print(f"Max comparisons per sample: 14")
     print(f"{'='*80}\n")
     
     all_results = []
+    failed_samples = []
     completed_count = 0
     with ThreadPoolExecutor(max_workers=len(new_samples)) as executor:
         # Submit all tasks
@@ -829,64 +868,85 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
             except Exception as e:
                 sample = futures[future]
                 completed_count += 1
-                print(f"✗ Failed {completed_count}/{len(new_samples)}: {sample.get('id', 'unknown')} - Error: {e}")
+                sample_id = sample.get('id', 'unknown')
+                failed_samples.append(sample_id)
+                
+                print(f"\n{'!'*80}")
+                print(f"✗ FAILED {completed_count}/{len(new_samples)}: {sample_id}")
+                print(f"Error: {type(e).__name__}: {e}")
+                print(f"{'!'*80}")
+                print("Traceback:")
+                traceback.print_exc()
+                print(f"{'!'*80}\n")
     
     # Print overall summary with leaderboard placements
     print("\n" + "="*80)
     print("OVERALL SUMMARY")
     print("="*80)
-    print(f"Total samples processed: {len(all_results)}")
-    print(f"Total comparisons: {sum(r['num_comparisons'] for r in all_results)}")
-    avg_comparisons = sum(r['num_comparisons'] for r in all_results) / len(all_results) if all_results else 0
-    print(f"Average comparisons per sample: {avg_comparisons:.1f}")
-    avg_theta = sum(r['final_theta'] for r in all_results) / len(all_results) if all_results else 0
-    avg_sigma = sum(r['final_sigma'] for r in all_results) / len(all_results) if all_results else 0
-    print(f"Average final theta: {avg_theta:.2f}")
-    print(f"Average final uncertainty (sigma): {avg_sigma:.2f}")
+    print(f"Total samples attempted: {len(new_samples)}")
+    print(f"Successfully processed: {len(all_results)}")
+    if failed_samples:
+        print(f"Failed: {len(failed_samples)}")
+        print(f"Failed sample IDs: {', '.join(failed_samples)}")
     
-    # Convergence statistics
-    converged = sum(1 for r in all_results if 'threshold' in r['convergence_reason'].lower())
-    print(f"\nConvergence statistics:")
-    print(f"  Reached uncertainty threshold: {converged}/{len(all_results)}")
-    print(f"  Hit max comparisons: {len(all_results) - converged}/{len(all_results)}")
+    if all_results:
+        print(f"\nTotal comparisons: {sum(r['num_comparisons'] for r in all_results)}")
+        avg_comparisons = sum(r['num_comparisons'] for r in all_results) / len(all_results)
+        print(f"Average comparisons per sample: {avg_comparisons:.1f}")
+        avg_theta = sum(r['final_theta'] for r in all_results) / len(all_results)
+        avg_sigma = sum(r['final_sigma'] for r in all_results) / len(all_results)
+        print(f"Average final theta: {avg_theta:.2f}")
+        print(f"Average final uncertainty (sigma): {avg_sigma:.2f}")
+        
+        # Convergence statistics
+        converged = sum(1 for r in all_results if 'threshold' in r['convergence_reason'].lower())
+        print(f"\nConvergence statistics:")
+        print(f"  Reached uncertainty threshold: {converged}/{len(all_results)}")
+        print(f"  Hit max comparisons: {len(all_results) - converged}/{len(all_results)}")
+    else:
+        print("\n⚠ No samples were successfully processed!")
     
-    print("\n" + "="*80)
-    print("DETAILED LEADERBOARD PLACEMENTS")
-    print("="*80)
-    print(f"{'Rank':<10} {'Sample ID':<50} {'Rating':<20} {'Percentile':<12} {'Comparisons':<12}")
-    print("-" * 80)
-    
-    # Sort results by rank
-    sorted_results = sorted(all_results, key=lambda r: r['leaderboard_rank'])
-    
-    for r in sorted_results:
-        sample_id = r['new_sample_id']
-        rating = f"{r['final_theta']:.2f} ± {r['final_sigma']:.2f}"
-        rank = f"#{r['leaderboard_rank']}/{r['leaderboard_total']}"
-        percentile = f"{r['leaderboard_percentile']}th"
-        comparisons = str(r['num_comparisons'])
-        print(f"{rank:<10} {sample_id:<50} {rating:<20} {percentile:<12} {comparisons:<12}")
-    
-    # Additional statistics
-    print("\n" + "="*80)
-    print("PLACEMENT DISTRIBUTION")
-    print("="*80)
-    ranks = [r['leaderboard_rank'] for r in all_results]
-    percentiles = [r['leaderboard_percentile'] for r in all_results]
-    print(f"Best placement: #{min(ranks)} ({max(percentiles)}th percentile)")
-    print(f"Worst placement: #{max(ranks)} ({min(percentiles)}th percentile)")
-    print(f"Median placement: #{sorted(ranks)[len(ranks)//2]} ({sorted(percentiles)[len(percentiles)//2]}th percentile)")
-    
-    # Save results
-    print("\n" + "="*80)
-    print("SAVING RESULTS")
-    print("="*80)
-    
-    # Save comprehensive aggregate results with all comparison details
-    save_aggregate_results(all_results, output_name=output_name)
-    
-    # Save placement summary
-    save_placement_summary(all_results, output_name=output_name)
+    # Only show detailed results if there are successful samples
+    if all_results:
+        print("\n" + "="*80)
+        print("DETAILED LEADERBOARD PLACEMENTS")
+        print("="*80)
+        print(f"{'Rank':<10} {'Sample ID':<50} {'Rating':<20} {'Percentile':<12} {'Comparisons':<12}")
+        print("-" * 80)
+        
+        # Sort results by rank
+        sorted_results = sorted(all_results, key=lambda r: r['leaderboard_rank'])
+        
+        for r in sorted_results:
+            sample_id = r['new_sample_id']
+            rating = f"{r['final_theta']:.2f} ± {r['final_sigma']:.2f}"
+            rank = f"#{r['leaderboard_rank']}/{r['leaderboard_total']}"
+            percentile = f"{r['leaderboard_percentile']}th"
+            comparisons = str(r['num_comparisons'])
+            print(f"{rank:<10} {sample_id:<50} {rating:<20} {percentile:<12} {comparisons:<12}")
+        
+        # Additional statistics
+        print("\n" + "="*80)
+        print("PLACEMENT DISTRIBUTION")
+        print("="*80)
+        ranks = [r['leaderboard_rank'] for r in all_results]
+        percentiles = [r['leaderboard_percentile'] for r in all_results]
+        print(f"Best placement: #{min(ranks)} ({max(percentiles)}th percentile)")
+        print(f"Worst placement: #{max(ranks)} ({min(percentiles)}th percentile)")
+        print(f"Median placement: #{sorted(ranks)[len(ranks)//2]} ({sorted(percentiles)[len(percentiles)//2]}th percentile)")
+        
+        # Save results
+        print("\n" + "="*80)
+        print("SAVING RESULTS")
+        print("="*80)
+        
+        # Save comprehensive aggregate results with all comparison details
+        save_aggregate_results(all_results, output_name=output_name)
+        
+        # Save placement summary
+        save_placement_summary(all_results, output_name=output_name)
+    else:
+        print("\n⚠ Skipping detailed results and file saving due to no successful samples.")
 
 
 def cli_main():
@@ -895,32 +955,38 @@ def cli_main():
     """
     # Parse command line arguments
     parser = argparse.ArgumentParser(
-        description="Integrate new samples from an eval log into the Bradley-Terry leaderboard",
+        description="Integrate new samples from an eval log or JSON file into the Bradley-Terry leaderboard",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Basic usage (model is required)
+  # Basic usage with .eval file (model is required)
   python sample_integration.py 2025-10-19T14-32-43+03-00_oversight-subversion_2s8d5NcbFfm9ffNrzJZyjt.eval --model openai/gpt-5-mini
   python sample_integration.py mylog.eval -m anthropic/claude-sonnet-4.5
   
-  # Using full path to eval file
+  # Using JSON file directly (skips .eval to JSON conversion)
+  python sample_integration.py partial_transcripts/partial_transcripts_swe_gym_4458.json --model x-ai/grok-4-fast
+  python sample_integration.py mysamples.json -m openai/gpt-5-mini
+  
+  # Using full path to eval or JSON file
   python sample_integration.py /path/to/logfile.eval --model openai/gpt-5-mini
+  python sample_integration.py /path/to/samples.json --model openai/gpt-5-mini
   
   # Specifying custom leaderboard file
   python sample_integration.py mylog.eval --model openai/gpt-5-mini --leaderboard custom_leaderboard.json
   
   # Specifying custom output name (creates my_results.json and my_results_summary.txt)
   python sample_integration.py mylog.eval -m openai/gpt-5-mini --output my_results
-  python sample_integration.py mylog.eval -m openai/gpt-5-mini -o my_results
+  python sample_integration.py samples.json -m openai/gpt-5-mini -o my_results
   
 Note: Results are saved to the 'apollo_leaderboard_placement' directory
+      JSON files should contain a list of samples with 'id', 'prompts', and 'metadata' fields
         """
     )
     
     parser.add_argument(
         'eval_file',
         type=str,
-        help='Name or path of the .eval log file to process. If just a filename, looks in ../logs/'
+        help='Name or path of the .eval log file or .json file to process. If just a filename, looks in eval_logs/ or partial_transcripts/'
     )
     
     parser.add_argument(
@@ -952,34 +1018,43 @@ Note: Results are saved to the 'apollo_leaderboard_placement' directory
     
     log_file_path = Path(log_file_input)
     
-    # If it's not an absolute path and doesn't exist, try looking in ../logs/
+    # If it's not an absolute path and doesn't exist, try looking in different directories
     if not log_file_path.is_absolute() and not log_file_path.exists():
         script_dir = Path(__file__).parent
-        potential_log_path = script_dir / "eval_logs" / log_file_input
-        if potential_log_path.exists():
-            log_file_path = potential_log_path
+        
+        # Try eval_logs/ directory for .eval files
+        potential_eval_path = script_dir / "eval_logs" / log_file_input
+        
+        # Try partial_transcripts/ directory for .json files
+        potential_json_path = script_dir / "partial_transcripts" / log_file_input
+        
+        if potential_eval_path.exists():
+            log_file_path = potential_eval_path
+        elif potential_json_path.exists():
+            log_file_path = potential_json_path
         else:
-            print(f"Error: Could not find eval file at {log_file_path} or {potential_log_path}")
+            print(f"Error: Could not find file at {log_file_path}")
+            print(f"  Also checked: {potential_eval_path}")
+            print(f"  Also checked: {potential_json_path}")
             sys.exit(1)
     
     # Check if log file exists
     if not log_file_path.exists():
-        print(f"Error: Eval file not found: {log_file_path}")
+        print(f"Error: File not found: {log_file_path}")
         sys.exit(1)
     
     # Determine leaderboard file path
     if args.leaderboard:
         leaderboard_file = Path(args.leaderboard)
-    else:
-        script_dir = Path(__file__).parent
-        leaderboard_file = script_dir / "leaderboards" / "gpt_5_mini_leaderboard.json"
     
     # Check if leaderboard file exists
     if not leaderboard_file.exists():
         print(f"Error: Leaderboard file not found: {leaderboard_file}")
         sys.exit(1)
     
-    print(f"Using eval file: {log_file_path}")
+    # Determine file type for display
+    file_type = "JSON file" if log_file_path.suffix.lower() == '.json' else ".eval file"
+    print(f"Using input file: {log_file_path} ({file_type})")
     print(f"Using leaderboard: {leaderboard_file}")
     print(f"Using model: {args.model}")
     if args.output:
@@ -998,15 +1073,17 @@ if __name__ == "__main__":
         script_dir = Path(__file__).parent
         
         # Define parameters for direct execution
-        log_file = "eval_logs" / "2025-10-19T14-32-43+03-00_oversight-subversion_2s8d5NcbFfm9ffNrzJZyjt.eval"
-        leaderboard_file = script_dir / "leaderboards" / "gpt_5_mini_leaderboard.json"
-        model = "openai/gpt-5-mini"
-        output_name = None  # Auto-generate with timestamp
-        
+        log_file = script_dir / "eval_logs" / "2025-10-19T14-32-43+03-00_oversight-subversion_2s8d5NcbFfm9ffNrzJZyjt.eval"
+        leaderboard_file = script_dir / "leaderboards" / "grok_4_fast_leaderboard.json"
+        model = "x-ai/grok-4-fast"
+        output_name = "explanations_test"  
         print("="*80)
         print("RUNNING IN DIRECT EXECUTION MODE")
         print("="*80)
-        print(f"Using eval file: {log_file}")
+        
+        # Determine file type
+        file_type = "JSON file" if Path(log_file).suffix.lower() == '.json' else ".eval file"
+        print(f"Using input file: {log_file} ({file_type})")
         print(f"Using leaderboard: {leaderboard_file}")
         print(f"Using model: {model}")
         print("="*80 + "\n")

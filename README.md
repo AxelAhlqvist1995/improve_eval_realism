@@ -6,22 +6,6 @@ A system for evaluating and ranking AI conversation transcripts by their realism
 
 This project implements a comprehensive evaluation framework to determine how realistic AI assistant conversations appear. It uses multiple LLM judges to perform pairwise comparisons between conversation transcripts, then applies the Bradley-Terry model to compute global ratings and rankings.
 
-**Key Innovation**: Rather than relying on absolute scoring, this system uses relative comparisons to build a leaderboard, similar to how ELO ratings work in chess. 
-
-## Features
-
-### Core Functionality
-- 🏆 **Bradley-Terry Leaderboard**: Calculate global ratings from pairwise comparisons using the MM algorithm
-- 🔄 **Adaptive Integration**: Integrate new samples into existing leaderboards with minimal comparisons
-- ⚡ **Parallel Processing**: High-throughput parallelized comparison execution
-- 🎯 **Multiple Judge Prompts**: Uses 5 different judge prompts
-- 📊 **Uncertainty Tracking**: Bayesian posterior variance updates for determing confidence intervals for rating values 
-
-### Quality Assurance
-- ✅ **Sanity Checks**: Automated validation of rating normalization, convergence, and other parameters
-- 🔍 **Transitivity Testing**: Verify logical consistency of judge decisions
-- 📏 **Order Bias Detection**: Test for positional bias in judge prompts (whether it predominantly selects the first sample it's presented or the seconf one)
-
 ## Setup
 
 ### Setup
@@ -41,14 +25,12 @@ echo "OPENROUTER_API_KEY=your_key_here" > .env
 4. Unizp datasets/processed_needham_dataset.json.zip
 It's zipped in order to respect licensing requirements of some samples used for this dataset
 
-### Required Packages
-- `requests` - API communication
-- `python-dotenv` - Environment variable management
-- `networkx` - Graph analysis for diagnostics
-- `numpy` - Numerical computations
-- `inspect_ai` - For processing eval logs
 
 ## Quick Start
+
+### 0. Unzip the dataset
+
+Unzip processe_cleaned_needham_dataset.json.zip (it's zipped for licensing reasons)
 
 ### 1. Calculate a Leaderboard from Scratch
 
@@ -57,7 +39,7 @@ python calculate_leaderboard.py
 ```
 
 This will:
-- Load samples from `datasets/processed_needham_dataset.json`
+- Load samples from `datasets/processed_cleaned_needham_dataset.json`
 - Run adaptive pairwise comparisons (exploration then exploitation phases)
 - Calculate Bradley-Terry ratings
 - Save results to `leaderboards/bradley_terry_results_<timestamp>.json`
@@ -77,10 +59,12 @@ results = run_bradley_terry_competition(
 ### 2. Integrate New Samples into Existing Leaderboard
 
 ```bash
-python sample_integration.py <inspect_eval_file.eval> --model openai/gpt-5-mini
+python sample_integration.py <input_file> --model <model_name>
 ```
 
-Example:
+The script accepts both `.eval` files and `.json` files as input:
+
+**From an inspect eval log:**
 ```bash
 python sample_integration.py 2025-10-19T14-32-43+03-00_oversight-subversion.eval \
     --model openai/gpt-5-mini \
@@ -88,11 +72,52 @@ python sample_integration.py 2025-10-19T14-32-43+03-00_oversight-subversion.eval
     --output my_results
 ```
 
-This will:
-- Extract samples from the eval log
-- Strategically compare them against calibration set samples
-- Determine their leaderboard placement
-- Save detailed results to `apollo_leaderboard_placement/`
+**From a JSON file with samples:**
+```bash
+python sample_integration.py partial_transcripts/partial_transcripts_swe_gym_4458.json \
+    --model x-ai/grok-4-fast \
+    --leaderboard leaderboards/grok_4_fast_leaderboard.json \
+    --output swe_gym_4458
+```
+
+**Options:**
+- `--model` / `-m`: OpenRouter model for comparisons (required)
+- `--leaderboard`: Path to leaderboard JSON file (defaults based on model)
+- `--output` / `-o`: Base name for output files (auto-generated if omitted)
+
+**What it does:**
+1. Extracts/loads samples from the input file
+2. For each sample, runs comparisons against a leaderboard
+3. Calculates leaderboard placement (rank and percentile)
+4. Saves detailed results to `apollo_leaderboard_placement/`:
+   - `<output_name>.json`: Full comparison data with judge reasoning
+   - `<output_name>_summary.txt`: Human-readable placement summary
+
+### 3. Cluster Evaluation Features
+
+Analyze what makes conversations appear evaluation-like using topic modeling:
+
+```bash
+python cluster_eval_features.py
+```
+
+By default, this processes `apollo_leaderboard_placement/explanations_test.json` and saves results to `clusters/explanations_test_clusters.json`. You can modify the input file in the script's `main()` function.
+
+**What it does:**
+1. Extracts judge arguments from comparison data where samples appeared evaluation-like
+2. Uses BERTopic with embeddings to cluster similar arguments
+3. Generates human-readable topic labels using LLM
+4. Identifies common patterns in evaluation-like features
+
+**Outputs:**
+- `<input_name>_clusters.json`: Full cluster data with all arguments
+  - Each topic includes name, count, and all arguments (short + full descriptions)
+  - Arguments include sample_id for traceability
+- `<input_name>_clusters_summary.txt`: Human-readable summary
+  - Top 10 topics with representative examples
+  - Useful for quick overview of evaluation patterns
+
+
 
 ## Project Structure
 
@@ -107,14 +132,19 @@ Improve eval realism/
 │   ├── sample_comparison.py          # LLM-based pairwise comparison logic
 │   └── sample_integration.py         # Adaptive integration for new samples
 │
+├── Analysis Tools
+│   ├── cluster_eval_features.py      # BERTopic clustering of evaluation features
+│   ├── plot_turns_vs_percentile.py   # Visualization utilities
+│
 ├── Data Processing
 │   ├── process_needham_dataset.py    # Dataset preprocessing utilities
-│   └── extract_prompts_from_inspect_log.py  # Extract samples from eval logs
+│   ├── extract_prompts_from_inspect_log.py  # Extract samples from eval logs
+│   └── create_partial_transcripts.py # Create partial transcript samples
 │
 ├── Quality Assurance
-│   ├── basic_sanity_checks.py        # Automated validation checks
-│   ├── diagnose_bradley_terry_convergence.py  # Convergence diagnostics
 │   └── sanity_checks/
+│       ├── basic_sanity_checks.py        # Automated validation checks
+│       ├── diagnose_bradley_terry_convergence.py  # Convergence diagnostics
 │       ├── transitivity_test.py      # Test logical consistency
 │       └── order_consistency_test.py # Test for positional bias
 │
@@ -126,7 +156,10 @@ Improve eval realism/
     ├── datasets/                      # Input conversation datasets
     ├── leaderboards/                  # Calculated leaderboards
     ├── eval_logs/                     # Raw eval log files
-    └── apollo_leaderboard_placement/  # Integration results
+    ├── apollo_leaderboard_placement/  # Integration results with judge reasoning
+    ├── clusters/                      # Topic clustering results
+    ├── partial_transcripts/           # Processed transcript samples
+    └── plots/                         # Visualization outputs
 ```
 
 ## How It Works
@@ -170,53 +203,3 @@ When adding new samples to an existing leaderboard:
 
 This typically requires only 10-18 comparisons per sample vs. comparing against all calibration samples.
 
-## Configuration
-
-### Choosing a Model
-
-Supported via OpenRouter:
-- `openai/gpt-5-mini` - Fast, cost-effective
-- `x-ai/grok-4-fast` - Alternative with different characteristics
-- `anthropic/claude-sonnet-4.5` - High quality
-
-### Key Parameters
-
-**Leaderboard Calculation**:
-- `max_rounds`: Number of comparison rounds (e.g., 16)
-- `max_uncertainty_threshold`: Stop when max uncertainty drops below this (e.g., 20.0)
-- `max_workers`: Parallel comparison workers (e.g., 600)
-
-**Adaptive Integration**:
-- `max_comparisons`: Maximum comparisons per new sample (e.g., 18)
-- `uncertainty_threshold`: Target uncertainty for new samples (e.g., 20.0)
-- `k_neighbors`: Candidate pool size for opponent selection (e.g., 10)
-
-## Output Formats
-
-### Leaderboard Results
-```json
-{
-  "final_ratings": {
-    "sample_id": {
-      "rating": 125.43,
-      "uncertainty": 18.32,
-      "n_comparisons": 14
-    }
-  },
-  "comparison_history": [...],
-  "detailed_comparisons": [...],  // All judge decisions
-  "summary_statistics": {...}
-}
-```
-
-### Integration Results
-```json
-{
-  "new_sample_id": "oversight_subversion:42",
-  "final_theta": 87.65,
-  "final_sigma": 19.12,
-  "leaderboard_rank": 234,
-  "leaderboard_percentile": 72.3,
-  "comparisons": [...]  // Detailed comparison history
-}
-```
