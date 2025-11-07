@@ -102,7 +102,7 @@ def individual_comparison(transcript1: str, transcript2: str, api_key: str, mode
             "https://openrouter.ai/api/v1/chat/completions",
             headers=headers,
             json=data,
-            timeout=60
+            timeout=75
         )
         response.raise_for_status()
         

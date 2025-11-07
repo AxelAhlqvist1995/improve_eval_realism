@@ -93,9 +93,49 @@ python sample_integration.py partial_transcripts/partial_transcripts_swe_gym_445
    - `<output_name>.json`: Full comparison data with judge reasoning
    - `<output_name>_summary.txt`: Human-readable placement summary
 
-### 3. Cluster Evaluation Features
+### 3. Analyze Eval Realism (Integrated Workflow)
 
-Analyze what makes conversations appear evaluation-like using topic modeling:
+**NEW: Complete end-to-end workflow** that combines leaderboard placement and clustering analysis:
+
+```bash
+python analyze_eval_realism.py <eval_file> [--output-name <name>]
+```
+
+**Examples:**
+```bash
+# Analyze a .eval file
+python analyze_eval_realism.py logs/my_eval.eval
+
+# Analyze a JSON file with samples  
+python analyze_eval_realism.py partial_transcripts/my_samples.json
+
+# Use custom output name
+python analyze_eval_realism.py my_eval.eval --output-name my_analysis
+```
+
+**What it does:**
+1. Loads samples from `.eval` file
+2. Places each sample on the Grok 4 fast leaderboard
+3. Extracts eval awareness reasons from judge comparisons
+4. Clusters similar reasons using BERTopic with LLM-based topic labels
+5. Saves all results to a single timestamped directory
+
+**Outputs:**
+All files are saved to `eval_analysis_results/<output_name>_<timestamp>/`:
+- `<output_name>.json`: Full leaderboard placement data with judge reasoning
+- `<output_name>_summary.txt`: Human-readable placement summary
+- `eval_awareness_clusters.json`: Complete cluster data
+- `eval_awareness_clusters_summary.txt`: Cluster summary with top patterns
+
+This is the **recommended workflow** for analyzing eval realism in one command!
+
+📖 **See [USAGE_GUIDE.md](USAGE_GUIDE.md) for detailed instructions and examples.**
+
+---
+
+### 3a. Cluster Evaluation Features (Standalone)
+
+For standalone clustering analysis of existing placement results:
 
 ```bash
 python cluster_eval_features.py
@@ -133,6 +173,7 @@ Improve eval realism/
 │   └── sample_integration.py         # Adaptive integration for new samples
 │
 ├── Analysis Tools
+│   ├── analyze_eval_realism.py       # ⭐ Integrated workflow (placement + clustering)
 │   ├── cluster_eval_features.py      # BERTopic clustering of evaluation features
 │   ├── plot_turns_vs_percentile.py   # Visualization utilities
 │

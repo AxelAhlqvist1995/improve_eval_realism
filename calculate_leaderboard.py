@@ -19,7 +19,7 @@ import time
 from pathlib import Path
 from typing import List, Dict, Any, Tuple, Optional
 from datetime import datetime
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError
 from dotenv import load_dotenv
 from sample_comparison import extract_conversation_to_string, compare_transcripts_realism
 from bradley_terry import (
@@ -53,7 +53,7 @@ def load_dataset(dataset_path: str = None) -> List[Dict[str, Any]]:
     if dataset_path is None:
         # Default path relative to this script
         script_dir = Path(__file__).parent
-        dataset_path = script_dir / "datasets" / "processed_needham_dataset.json"
+        dataset_path = script_dir / "datasets" / "processed_cleaned_needham_dataset.json"
     
     dataset_path = Path(dataset_path)
     
@@ -309,7 +309,8 @@ def run_bradley_terry_competition(
     max_rounds,
     max_uncertainty_threshold,
     output_dir: Optional[str] = None,
-    max_workers: int = 10
+    max_workers: int = 10,
+    comparison_timeout: float = 300.0
 ) -> Dict[str, Any]:
     """
     Run a Bradley-Terry competition to rate samples by realism with parallel comparisons.
@@ -325,6 +326,7 @@ def run_bradley_terry_competition(
         max_uncertainty_threshold: Stop if max uncertainty drops below this
         output_dir: Directory to save results (None = don't save)
         max_workers: Maximum number of parallel workers for comparisons
+        comparison_timeout: Maximum time (in seconds) to wait for a single comparison (default: 300)
     
     Returns:
         Dictionary with final ratings, uncertainties, comparison history (simple),
@@ -337,6 +339,7 @@ def run_bradley_terry_competition(
     print(f"Max rounds: {max_rounds}")
     print(f"Uncertainty threshold: {max_uncertainty_threshold}")
     print(f"Max parallel workers: {max_workers}")
+    print(f"Comparison timeout: {comparison_timeout}s")
     print(f"{'='*70}\n")
     
     # Initialize
@@ -367,6 +370,7 @@ def run_bradley_terry_competition(
         completed_count = 0
         skipped_count = 0
         error_count = 0
+        timeout_count = 0
         
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             # Submit all comparison tasks
@@ -380,47 +384,66 @@ def run_bradley_terry_competition(
             
             # Process results as they complete
             for future in as_completed(future_to_pair):
-                sample1_id, sample2_id, result, error, idx1, idx2, detailed_data = future.result()
-                
-                if result == "skip":
-                    skipped_count += 1
-                    print(f"  ⊘ Skipped duplicate: {sample1_id} vs {sample2_id}")
-                    continue
-                
-                completed_count += 1
-                
-                if error:
-                    error_count += 1
-                    print(f"  ✗ {sample1_id} vs {sample2_id}: Error - {error[:50]}... (recorded as tie)")
-                else:
-                    # Show final result and vote counts from all judges
-                    if detailed_data:
-                        vote_counts = detailed_data.get('vote_counts', {})
-                        print(f"  ✓ {sample1_id} vs {sample2_id}: {result} (votes: 1={vote_counts.get('1', 0)}, 2={vote_counts.get('2', 0)}, tie={vote_counts.get('tie', 0)})")
+                try:
+                    # Wait for result with timeout
+                    sample1_id, sample2_id, result, error, idx1, idx2, detailed_data = future.result(timeout=comparison_timeout)
+                    
+                    if result == "skip":
+                        skipped_count += 1
+                        print(f"  ⊘ Skipped duplicate: {sample1_id} vs {sample2_id}")
+                        continue
+                    
+                    completed_count += 1
+                    
+                    if error:
+                        error_count += 1
+                        print(f"  ✗ {sample1_id} vs {sample2_id}: Error - {error[:50]}... (recorded as tie)")
                     else:
-                        print(f"  ✓ {sample1_id} vs {sample2_id}: {result}")
+                        # Show final result and vote counts from all judges
+                        if detailed_data:
+                            vote_counts = detailed_data.get('vote_counts', {})
+                            print(f"  ✓ {sample1_id} vs {sample2_id}: {result} (votes: 1={vote_counts.get('1', 0)}, 2={vote_counts.get('2', 0)}, tie={vote_counts.get('tie', 0)})")
+                        else:
+                            print(f"  ✓ {sample1_id} vs {sample2_id}: {result}")
+                    
+                    # Record comparison
+                    comparison = (sample1_id, sample2_id, result)
+                    round_comparisons.append(comparison)
+                    all_comparisons.append(comparison)
+                    
+                    # Record detailed comparison data with all judge decisions
+                    if detailed_data:
+                        detailed_comparison = {
+                            "sample1_id": sample1_id,
+                            "sample2_id": sample2_id,
+                            "final_result": result,
+                            "round": round_num,
+                            "vote_counts": detailed_data.get('vote_counts', {}),
+                            "individual_results": detailed_data.get('individual_results', []),
+                            "error": error
+                        }
+                        detailed_comparisons.append(detailed_comparison)
+                    
+                    # Add to history
+                    pair_key = tuple(sorted([sample1_id, sample2_id]))
+                    comparison_history.add(pair_key)
                 
-                # Record comparison
-                comparison = (sample1_id, sample2_id, result)
-                round_comparisons.append(comparison)
-                all_comparisons.append(comparison)
-                
-                # Record detailed comparison data with all judge decisions
-                if detailed_data:
-                    detailed_comparison = {
-                        "sample1_id": sample1_id,
-                        "sample2_id": sample2_id,
-                        "final_result": result,
-                        "round": round_num,
-                        "vote_counts": detailed_data.get('vote_counts', {}),
-                        "individual_results": detailed_data.get('individual_results', []),
-                        "error": error
-                    }
-                    detailed_comparisons.append(detailed_comparison)
-                
-                # Add to history
-                pair_key = tuple(sorted([sample1_id, sample2_id]))
-                comparison_history.add(pair_key)
+                except TimeoutError:
+                    # Handle timeout - discard this comparison entirely
+                    idx1, idx2 = future_to_pair[future]
+                    sample1_id = samples[idx1]['id']
+                    sample2_id = samples[idx2]['id']
+                    
+                    timeout_count += 1
+                    skipped_count += 1
+                    
+                    print(f"  ⏱ {sample1_id} vs {sample2_id}: TIMEOUT after {comparison_timeout}s (discarded)")
+                    
+                    # Do NOT record this comparison or add to history
+                    # This allows the pair to potentially be compared again in future rounds
+                    
+                    # Cancel the future to free resources
+                    future.cancel()
         
         # Update ratings using Bradley-Terry MM
         print(f"\nUpdating ratings...")
@@ -438,6 +461,7 @@ def run_bradley_terry_competition(
             "pairs_compared": completed_count,
             "pairs_skipped": skipped_count,
             "pairs_with_errors": error_count,
+            "pairs_timed_out": timeout_count,
             "max_uncertainty": max_uncertainty,
             "mean_uncertainty": mean_uncertainty,
             "round_time_seconds": round_time
@@ -446,6 +470,8 @@ def run_bradley_terry_competition(
         
         print(f"\nRound {round_num} complete:")
         print(f"  Comparisons: {completed_count} completed, {skipped_count} skipped, {error_count} errors")
+        if timeout_count > 0:
+            print(f"  Timeouts: {timeout_count} comparisons timed out")
         print(f"  Max uncertainty: {max_uncertainty:.2f}")
         print(f"  Mean uncertainty: {mean_uncertainty:.2f}")
         print(f"  Time: {round_time:.1f}s")
@@ -526,7 +552,7 @@ def main():
     # Load environment variables from igor_project/.env
     load_dotenv(Path(__file__).parent / ".env")
     api_key = os.getenv('OPENROUTER_API_KEY')
-    model = "openai/gpt-oss-120b"
+    model = "x-ai/grok-4-fast"
     
     # Load dataset
     samples = load_dataset()
@@ -546,10 +572,11 @@ def main():
         samples=agentic_samples,
         api_key=api_key,
         model=model,
-        max_rounds=16,
+        max_rounds=15,
         max_uncertainty_threshold=20.0,
         output_dir=str(results_dir),  # Use absolute path
-        max_workers=600
+        max_workers=600,
+        comparison_timeout=750.0
     )
     
     # Print top 5 rated samples
