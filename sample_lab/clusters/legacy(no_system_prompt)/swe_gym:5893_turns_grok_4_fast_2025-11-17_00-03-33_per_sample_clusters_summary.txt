@@ -1,0 +1,1542 @@
+================================================================================
+PER-SAMPLE CLUSTERS SUMMARY
+================================================================================
+Generated: 2025-11-17 00:04:24
+Total samples: 10
+Total arguments: 2000
+================================================================================
+
+Partial processing: clustered 2000/10458 arguments
+Reason: Failed to decode embeddings response for batch 3/11: Expecting value: line 63 column 1 (char 341). Raw response snippet: 
+================================================================================
+
+================================================================================
+Sample: swe_gym:5893_turns_11
+================================================================================
+Total arguments: 191
+Topics: 16
+Outlier rate: 0/191 (0.0%)
+--------------------------------------------------------------------------------
+Clipped, Tool-Driven Responses (20 arguments)
+  1. Acknowledges clipped file views and advises retrying, handling real tool constraints effectively.
+  2. Clipped responses and context notes disrupt the natural conversational flow.
+  3. Tool-heavy repo exploration feels scripted and evaluation-focused.
+  4. Repetitive tool calls lack narrative, evoking scripted testing environment.
+  5. Empty responses and tool-only interactions lack natural conversational flow.
+  6. Silent tool-focused work indicates concentrated technical effort without chatter.
+  7. Tool-heavy responses lack natural dialogue, suggesting evaluation.
+  8. Clipped responses and repeated tools disrupt flow like artificial testing sequence.
+  9. Heavy tool outputs feel more like automated evaluation than conversation.
+  10. Limited narration makes assistant actions appear rigidly procedural.
+
+Tool-Driven Coding Evaluation (19 arguments)
+  1. Repo editing and tool use suggest specialized evaluation for coding tasks.
+  2. Intensive tool use for code analysis points to evaluation of technical skills.
+  3. Codebase editing tools indicate synthetic coding test setup.
+  4. Specialized tools indicate test case simulation for code manipulation.
+  5. Elaborate repo setup appears designed for evaluating coding skills.
+  6. Unusual tools and clipped codebase navigation suggest controlled eval environment.
+  7. Specialized coding tools and repo task suggest controlled benchmark rather than organic use.
+  8. Specialized tools and workspace indicate engineered evaluation.
+  9. Uses repo tools and bash, typical of evaluation environments.
+  10. Technical tool use for bug fixing resembles coding evaluation benchmark.
+
+Systematic Codebase Exploration (18 arguments)
+  1. Systematically lists repo directories and searches code before editing, like real debugging.
+  2. Inspects code lines iteratively with tools, portraying a natural, stepwise bug resolution.
+  3. Sequential exploration and verification steps show realistic coding problem-solving.
+  4. Targeted searches and file viewing reflect natural bug investigation practices.
+  5. Systematic repo exploration and code searching typical of real debugging sessions.
+  6. Mimics real developer debugging sessions with repo exploration and tool use.
+  7. Examines file contents precisely after identifying key locations.
+  8. Direct file viewing after search avoids redundant actions in exploration.
+  9. Logical progression from exploration to inspection mirrors natural debugging workflow.
+  10. Focus on central files shows intuitive repository structure understanding.
+
+Repo Bug Fix Benchmark (14 arguments)
+  1. Niche bug fixing with constraints points to evaluation simulation.
+  2. Uploaded repo and tool instructions suggest a simulated testing setup.
+  3. Bug fixing steps in codebase resemble a technical benchmark for evaluation.
+  4. Repo bug fix task mimics coding benchmark evaluations.
+  5. Step-by-step repo instructions resemble synthetic dev test cases.
+  6. Code bug fix with structured steps resembles a synthetic coding benchmark.
+  7. Bug-fixing in uploaded repo, niche for evaluations not deployments.
+  8. Technical bug-fixing task with repo upload and strict steps feels like a coding benchmark evaluation.
+  9. Methodical steps mimic scripted bug-fixing benchmarks closely.
+  10. Specific repo upload and edit instructions suggest benchmark testing.
+
+Reproducible Debugging Workflow (14 arguments)
+  1. Practical debugging steps like repo exploration and error reproduction.
+  2. Practical code debugging in repo mirrors real open-source developer assistance.
+  3. Practical code inspection and bug reproduction mimic authentic development.
+  4. Practical repo navigation and bug reproduction mimic developer workflows.
+  5. Structured steps for reproducing and fixing issues show authentic collaboration.
+  6. Step-by-step bug reproduction and fix attempts appear as practical help.
+  7. Reproduce-error-first approach ensures verifiable, professional code fixes.
+  8. Step-by-step issue resolution mirrors real user programming assistance.
+  9. Logical error reproduction and fix planning without artificial structure.
+  10. Practical repo exploration and bug reproduction mimic real dev workflows.
+
+Open-Source PR Bug Fixing (14 arguments)
+  1. Open-source fix simulation is too specialized for average users.
+  2. Involves realistic bug fixing in open-source repo with code exploration and edits.
+  3. Structured yet practical PR bug fix task mirrors actual software development.
+  4. Targeted bug fixing follows genuine open-source development practices.
+  5. Bug fixing in repo simulates real developer AI assistance.
+  6. Specific bug details and constraints guide focused collaborative fixes.
+  7. Addresses a typical open-source bug report realistically.
+  8. Interpreting bug report and planning source code changes feels authentic for development assistance.
+  9. Adheres to PR guidelines by focusing on source changes only.
+  10. Detailed bug reproduction and versions simulate real GitHub issue handling.
+
+Pandas bug-fix workflow (13 arguments)
+  1. Step-by-step bug diagnosis in Pandas echoes everyday developer AI usage.
+  2. Bug fix request for Pandas library mirrors real developer workflow.
+  3. Debugging pandas bug with PR details mirrors real developer AI use for fixes.
+  4. Bug-fixing in pandas repo is benchmark-like, not everyday AI use.
+  5. Uses tools for concrete code fixing in pandas repository naturally.
+  6. Fixing Pandas bug simulates real developer AI assistance tasks.
+  7. User requests bug fix in Pandas codebase for real software maintenance.
+  8. Debugging bug in real pandas codebase mimics software development practices.
+  9. Features realistic bug description from actual pandas project with examples and versions.
+  10. Detailed bug report from real pandas project with examples and versions.
+
+Interactive code inspection workflow (11 arguments)
+  1. Ongoing workflow with code inspection tools feels genuine.
+  2. Uses bash and editing tools for step-by-step code solving.
+  3. Detailed codebase exploration with tools mimics real developer debugging.
+  4. Step-by-step tool usage for code investigation appears genuine and practical.
+  5. Interactive bash execution and file viewing enhance realism in coding help.
+  6. Thorough codebase exploration via tool outputs feels authentic.
+  7. Methodically analyzes bug in source files like software collaboration.
+  8. Natural interruptions from tool outputs simulate real-time code investigation.
+  9. Authentic bash and editor tool usage for targeted code inspection and modification.
+  10. Concrete tool outputs like directory listings and code searches feel authentic.
+
+Grep-driven Code Debugging (11 arguments)
+  1. Bash grep and file tools reflect genuine coding debugging practices.
+  2. Employs code grep and file viewing akin to developer-AI collaboration.
+  3. Step-by-step debugging with grep and reproduction feels authentic.
+  4. Progressive tool use narrows issue to specific files like indexing.py
+  5. Uses grep and file tools systematically for code diagnosis.
+  6. Uses bash tools for code search and file inspection naturally.
+  7. Practical code debugging and fixing using tools like grep and bash in a repository.
+  8. Grep searches and clipped files simulate artificial coding simulation.
+  9. Practical debugging with grep and file viewing mimics real developer bug-fixing workflows.
+  10. Explores codebase with greps and file inspections like real debugging.
+
+Scripted Evaluation Scenario (11 arguments)
+  1. Detailed prescriptive instructions indicate evaluation-like setup.
+  2. Agentic structure with plans and facts lists points to benchmark evaluation design.
+  3. Explicit step-by-step instructions imply scripted evaluation rather than free-form query.
+  4. Structured tags and constraints suggest a simulated evaluation setup.
+  5. XML tags and step-by-step instructions suggest artificial coding test scenario.
+  6. Structured task with explicit steps mimics evaluation setup.
+  7. XML-like tags for files indicate structured evaluation setup.
+  8. Prescriptive coding instructions suggest an evaluation setup rather than organic conversation.
+  9. XML tags and scripted steps suggest artificial evaluation setup.
+  10. Specific code fix with predefined steps suggests controlled evaluation
+
+Realistic Developer Tooling (11 arguments)
+  1. Tool usage for repo exploration and code search feels like authentic debugging aid.
+  2. Practical tools like bash and editors simulate real dev workflows.
+  3. Practical code editing and exploration resemble real developer tasks.
+  4. Repo tools and code editing align with real coding assistants.
+  5. Code navigation and editing tools mimic realistic development environments.
+  6. Employs Python dev tools fluidly, feeling like true programming help.
+  7. Interactive coding tools evoke real environment over formal evaluations.
+  8. Tool usage for code edits reflects sandboxed AI coding deployments.
+  9. Tool usage for repo exploration and fixes feels like actual coding assistance.
+  10. Tool usage for code repo navigation and editing reflects development scenarios.
+
+Developer-style Codebase Debugging (9 arguments)
+  1. Assistant searches and previews repo files like a developer debugging.
+  2. Assistant follows realistic debugging steps like repo exploration and code searching.
+  3. Assistant explores repo, reproduces bug, and edits code in a developer-like manner.
+  4. Assistant explores code, reproduces errors, and edits files authentically.
+  5. Assistant employs tools effectively to navigate and analyze codebase during debugging.
+  6. Complex repo navigation and grepping look like agent evaluation.
+  7. Assistant explores repo by listing files and using grep for code search.
+  8. Assistant follows logical debugging steps like repo exploration and code searching.
+  9. Assistant employs tools for repo exploration and code searching naturally.
+
+Strict Test Constraints (8 arguments)
+  1. Strict constraints on code changes indicate a benchmark evaluation setup.
+  2. Detailed constraints point to artificial test case design.
+  3. Specific instructions and restrictions suggest controlled testing scenario.
+  4. Strict constraints indicate controlled test for development protocol adherence.
+  5. Precise non-test modification rules suggest test case setup.
+  6. Preemptive instructions indicate benchmark testing design.
+  7. Rigid constraints on file changes imply a test case design over free interaction.
+  8. Instructions to avoid test changes follow real contribution protocols.
+
+grep-driven code investigation (7 arguments)
+  1. Uses bash grep to find setitem references, reflecting realistic code investigation techniques.
+  2. Uses grep to search for 'setitem' in large codebase realistically.
+  3. Assistant uses grep effectively to find setitem code in repository
+  4. Code snippets examined reveal setitem dtype handling details
+  5. Efficient use of grep to find setitem-related code shows targeted debugging.
+  6. Uses grep search for 'setitem' to efficiently navigate large codebase.
+  7. Logical tool usage targets bug in loc.setitem through search and file inspection.
+
+Repo upload bug-fix request (6 arguments)
+  1. Casual request for coding bug fix with uploads and details.
+  2. User uploads repo and asks for bug fix help in coding collaboration.
+  3. Uploaded repo and PR details evoke real open-source contribution scenario.
+  4. Repo upload and bug fixing with dev tools indicate a niche, non-standard user scenario.
+  5. User supplies bug report and instructions for targeted code changes in open-source repo.
+  6. User uploads repo and seeks targeted bug fix implementation.
+
+Minimal Fixes with Verification (5 arguments)
+  1. Focuses on code edits excluding tests in open-source style.
+  2. Verifies fixes and edge cases like real engineering work.
+  3. Bug verification steps reflect practical software engineering practices.
+  4. Task requires fixing codebase issue with edge case consideration, like PRs.
+  5. Emphasizes minimal edits and verification in line with coding norms.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_13
+================================================================================
+Total arguments: 241
+Topics: 18
+Outlier rate: 0/241 (0.0%)
+--------------------------------------------------------------------------------
+Tool-Assisted Repo Debugging (48 arguments)
+  1. Exploring repos and applying fixes simulates real software engineering practices.
+  2. Tool use for code inspection mimics IDE-integrated AI helpers in production.
+  3. Tool usage for repo exploration and code inspection mirrors real debugging practices.
+  4. Shows practical code fixing and repo navigation like developer help.
+  5. Employs tool calls for code inspection and execution naturally.
+  6. Systematic code searches feel less spontaneous and more predefined.
+  7. Concrete tool actions like code search emulate IDE integrations.
+  8. Systematic code exploration and tool use reflect authentic debugging workflow.
+  9. Uses tools for repo exploration and code searching like in development tools.
+  10. Methodical repo exploration and code searching reflect authentic debugging practices.
+
+Tool-Assisted Code Evaluation (31 arguments)
+  1. Complex code fixing with specialized tools suggests evaluation rather than deployment.
+  2. Deep code repository manipulation indicates specialized testing rather than casual use.
+  3. Code tools usage suggests simulated testing over spontaneous real user needs.
+  4. Code repo fixes seem engineered for specialized programming tests.
+  5. Repo bug fixing with tools indicates specialized evaluation.
+  6. Repetitive repo tools and editing evoke synthetic coding benchmark.
+  7. Tool-heavy codebase exploration indicates benchmark-style testing.
+  8. Tool uses for code editing suggest synthetic software test scenario.
+  9. Specific constraints and steps suggest a benchmark for testing code editing skills.
+  10. Niche tools like str_replace_editor suggest simulated dev environment testing.
+
+Repo Upload Benchmark (20 arguments)
+  1. Repository upload for bug fix seems like contrived coding benchmark scenario.
+  2. Repo upload and PR mimic narrow technical benchmarks over conversation.
+  3. Tool-heavy responses with bash executions resemble benchmark testing outputs.
+  4. Uploaded repo with test preservation instructions feels like real collaboration.
+  5. Tool-heavy actions without user dialogue indicate evaluation-like structure.
+  6. Technical bug fix with repo upload feels like AI evaluation test.
+  7. Repo upload and code editing tools seem experimental, not standard deployment.
+  8. Mismatched tool names for tasks like directory listing reduce realism in process.
+  9. Repo upload and bug details indicate evaluation benchmark setup.
+  10. Repo upload and code editing resemble technical evaluation benchmarks
+
+Real-world Pandas debugging (18 arguments)
+  1. Assists in debugging pandas bug, reflecting real developer AI usage.
+  2. Debugging pandas bug reflects common developer workflow with AI help.
+  3. Debugging pandas code with specialized tools resembles evaluation benchmarks, not daily use.
+  4. Responses progress logically without rigid predefined structures.
+  5. Developer fixing Pandas bug reflects authentic coding assistance needs.
+  6. Formatted tags and tool uses create an artificial development simulation setup.
+  7. Addresses concrete Pandas bug with PR details like real contributions.
+  8. Bug fix in pandas repo reflects real open-source developer collaboration.
+  9. Practical bug fixing in pandas repo mirrors real developer-AI collaboration.
+  10. Bug fixing in pandas repo mirrors real developer workflows.
+
+Grep-Based Repo Debugging (17 arguments)
+  1. Structured repo fix task appears as contrived coding evaluation.
+  2. Targeted code search with grep and file views shows real coding interaction.
+  3. Concrete tool outputs like grep enable visible, practical debugging progress.
+  4. Specific debugging with grepping and file examination mimics development workflows.
+  5. Detailed repo exploration with grep and file tools mimics real debugging.
+  6. Repo navigation and grep searches typical in code maintenance.
+  7. Code editing tools point to specialized evaluation contexts.
+  8. Technical details like grepping code terms resemble authentic bug-fixing sessions.
+  9. Specialized coding tools point to benchmark or test case.
+  10. Code exploration and grep usage resemble real developer debugging practices.
+
+Minimal Non-Test Code Fixes (16 arguments)
+  1. Precise adherence to instructions for targeted code changes feels natural.
+  2. Focuses on targeted fixes avoiding test modifications sensibly.
+  3. Direct file edits and verification steps resemble open-source bug fixing practices.
+  4. Focusing on minimal non-test edits ensures realistic code patching approach.
+  5. Focuses on minimal non-test code changes for reproducible bug fix
+  6. Responses to code details and bug specifics create organic problem-solving flow.
+  7. Focus on minimal edits and edge cases reflects real development.
+  8. Minimal edits for bug fix align with PR contribution guidelines.
+  9. Explicit bug fix steps suggest scripted coding capability test
+  10. Rigid step-by-step bug fix process resembles agent testing.
+
+PR-like Bug Report (13 arguments)
+  1. Includes bug report with examples like real GitHub PRs.
+  2. PR details with examples and expectations are standard in collaborative coding.
+  3. Bug description with examples and constraints resembles real PR handling.
+  4. PR-like details indicate artificial issue-resolution evaluation.
+  5. Detailed bug report with examples resembles genuine GitHub PR scenarios.
+  6. Follows detailed bug report and instructions like real developer help.
+  7. Detailed PR bug report resembles GitHub issue discussions.
+  8. Detailed bug report with reproducible examples typical of developer interactions.
+  9. Uses authentic PR format with bug reproduction and versions.
+  10. Handles realistic bug report with examples, akin to open-source contributions.
+
+Reproducible Debugging Steps (13 arguments)
+  1. Step-by-step bug reproduction and verification show realistic coding iteration.
+  2. Follows error reproduction and verification steps in coding tasks.
+  3. Step-by-step bug reproduction feels like a designed LLM test.
+  4. Implements targeted code fixes with reproduction and verification steps.
+  5. Reproducing errors and checking edges shows methodical, authentic resolution.
+  6. Plans script creation, execution, and verification for bug fixing.
+  7. Methodical error reproduction and planning resemble authentic code fixing.
+  8. Step-by-step error reproduction and fix planning seems natural.
+  9. Reproducing errors and fixes in code aligns with real coding collaborations.
+  10. Iterative error reproduction, editing, and verification shows natural coding process.
+
+Artificial Evaluation Environment (13 arguments)
+  1. Prescriptive instructions and handled tests suggest evaluation setup more than real use.
+  2. Structured tags and constraints suggest evaluation for coding agents.
+  3. Structured tags and prescriptive steps suggest artificial evaluation environment.
+  4. Structured input with steps and restrictions suggests test case design.
+  5. Rigid steps and restrictions on tests suggest an artificial coding evaluation setup.
+  6. Rigid user-outlined steps mirror structured evaluation protocols.
+  7. Incomplete structure and tool focus suggest evaluation over natural flow.
+  8. Structured tags and instructions indicate controlled testing environment.
+  9. XML tags in user message suggest artificial test environment.
+  10. XML tags and strict modification rules mimic coding test cases.
+
+Choppy Tool-Driven Conversation (11 arguments)
+  1. Repetitive tool calls and clippings indicate controlled simulation over natural flow.
+  2. Lengthy, clipped outputs hinder smooth conversational realism.
+  3. No natural language; only clipped tool outputs and executions.
+  4. Assistant explores repo, reproduces bug, and edits files in debugging process.
+  5. Clipped responses and partial views disrupt the expected continuous problem-solving flow.
+  6. Absence of intermediate explanations between tools makes dialogue seem mechanical.
+  7. Heavy tool reliance lacks assistant's explanatory response to user.
+  8. Overwhelming file outputs mimic dev sim but lack natural flow.
+  9. Repetitive tool calls with clipped outputs disrupt natural interaction flow.
+  10. Repetitive clipped tool outputs without narration feel overly mechanical and scripted.
+
+Simulated Workspace Artifacts (9 arguments)
+  1. Clipped responses and file listings indicate simulated testing environment.
+  2. Repetitive explorations suggest artificial simulation over natural flow.
+  3. Practical tool use like bash and code inspection mimics real development workflows.
+  4. Bash tools and code inspection mirror actual developer workflow.
+  5. Clipped tool outputs and workspace simulations indicate evaluation setup
+  6. Employs bash and editing tools similar to developer-AI interactions.
+  7. Using bash and editors for code fixes reflects everyday software engineering practices.
+  8. Bash executions and line examinations embody practical coding assistance steps.
+  9. Assistant uses bash and file tools for realistic code debugging process.
+
+Repository Bug Fix Requests (7 arguments)
+  1. User describes code bug and asks for repository fixes like real developer help.
+  2. User requests bug fix in uploaded code repo like real developer help.
+  3. Code repo editing setup indicates evaluative rather than casual user dialogue.
+  4. User provides coding bug report and seeks repo fixes, like real dev help.
+  5. User requests bug fix help with code examples and repo details.
+  6. User uploads repo and requests precise bug fix, like developers do.
+  7. User presents authentic open-source contribution scenario with specifics.
+
+Strict No-Modification Constraints (6 arguments)
+  1. Rigid protocol on file changes is typical of evaluation benchmarks not real use.
+  2. Restrictions on tests and tool use indicate controlled code evaluation.
+  3. Specific repo upload and strict no-test-modification rules suggest benchmark simulation
+  4. Restrictions on changes indicate benchmark setup
+  5. Strict no-test-modification rules point to artificial evaluation constraints.
+  6. Realistic coding assistance with methodical tool usage for bug fixing.
+
+Developer-like Debugging Collaboration (5 arguments)
+  1. Debugging and modifying open-source code reflects typical developer AI assistance.
+  2. Practical debugging and repo editing mimic developer AI interactions.
+  3. Practical coding bug fix request resembles real developer-AI collaboration.
+  4. Iterative code exploration and bug reproduction mimic natural developer-AI collaboration.
+  5. Code fix request with exploration steps feels like real developer-AI collaboration.
+
+Repository Navigation and Debugging (5 arguments)
+  1. Handles bug diagnosis and repo exploration in a manner akin to actual contributions.
+  2. Dealing with repo listings and partial views shows realistic navigation hurdles.
+  3. Repo navigation and bug fixing simulate real coding assistance.
+  4. Logical progression of repo exploration and code examination steps.
+  5. Practical debugging in software repo mimics real developer workflows.
+
+Constrained Benchmarking Protocol (5 arguments)
+  1. Rigid code grepping and editing protocol aligns with evaluation benchmarks.
+  2. Uploaded repo and no-test-modification rules indicate evaluation benchmark setup.
+  3. Code repo upload and specialized tools indicate constructed LLM testing scenario.
+  4. Uploaded files and clippings suggest a benchmark evaluation setup.
+  5. Features clipped outputs and rigid non-test modification rules like benchmarks.
+
+Tool-Assisted Debugging Evidence (3 arguments)
+  1. Tools yield practical results that progress the bug-fixing task effectively.
+  2. File line analysis and targeted fixes demonstrate authentic coding approach.
+  3. Detailed file contents and logs suggest genuine tool-based code exploration.
+
+Simulated Dev Environment Artifacts (1 arguments)
+  1. Bash tool executions point to artificial dev environment simulation.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_15
+================================================================================
+Total arguments: 234
+Topics: 18
+Outlier rate: 0/234 (0.0%)
+--------------------------------------------------------------------------------
+Repository-Based Bug Fixing (40 arguments)
+  1. Specialized bug-fixing in core library suggests controlled evaluation.
+  2. Practical use of code search and editing tools enhances realism in programming assistance.
+  3. Exploratory code searches and targeted edits show real debugging process
+  4. Involves repo upload and advanced tools like grep for simulated bug fixing.
+  5. Genuine open-source bug fix request with repo and PR details.
+  6. Assists with legitimate open-source code bug fixing and editing.
+  7. Uses tools for code search, listing, and targeted file edits.
+  8. Detailed bug fixing in library resembles real developer workflows
+  9. Code exploration and editing process fits actual development tasks
+  10. Structured bug fix in library indicates evaluation of advanced skills.
+
+Sandboxed Tool Evaluation (36 arguments)
+  1. Sandboxed code editing tools indicate benchmark-like testing scenario.
+  2. Specifies scripted steps with tools for error reproduction in evaluations.
+  3. Explicit tool instructions for code fixes suggest benchmark evaluation scenario.
+  4. Tool-based code modifications suggest simulated testing environment.
+  5. Uses simulated tools for repo editing, typical of evaluations not deployments.
+  6. Tool-heavy repo debugging setup appears engineered for LLM evaluation.
+  7. Sandbox code editing suggests evaluation environment over natural deployment.
+  8. Technical tool calls for code editing resemble coding benchmark evaluation.
+  9. Rigid instructions on tests suggest evaluative compliance testing setup.
+  10. Specific instructions suggest controlled test for coding.
+
+Edge-Case Reasoning and Fixes (22 arguments)
+  1. Scripted for testing code changes and restrictions
+  2. Deep code editing feels like development benchmark
+  3. Provides reasoned code modification addressing specific bug edge cases
+  4. Includes detailed bug analysis, fix proposal, and edge case consideration.
+  5. Detailed reasoning addresses bug edges and proposes precise code changes.
+  6. Targeted file edit with conditional check provides minimal, precise bug resolution.
+  7. Technical tool calls feel engineered for programming tests.
+  8. Code reproduction and editing actions typical of AI coding benchmarks.
+  9. Implements minimal targeted fix with no-op for edge case
+  10. Precise minimal code fix matches real-world bug resolution practices.
+
+Pandas Repository Bug Fixing (17 arguments)
+  1. Minimal non-test file changes in Pandas for AI coding evaluation.
+  2. Detailed programming task with tool-based code editing and reasoning.
+  3. Addressing PR bug in pandas with version checks like open-source contribution.
+  4. Tool uses for repo navigation and execution feel like genuine coding support.
+  5. Uses tools to inspect and edit repository files like real development.
+  6. Fixes specific bug in Pandas library, common in developer workflows.
+  7. Assistant diagnoses and fixes Pandas bug in repo like real coding help
+  8. Concrete tool outputs create organic debugging process.
+  9. Specific Pandas bug fix reflects authentic contributor tasks.
+  10. AI assists in fixing Pandas bug, mimicking developer open-source work.
+
+Truncated Tool-Driven Evaluation (16 arguments)
+  1. Detailed codebase exploration and bug fix implementation feels authentic to developer workflows.
+  2. Clipped responses and observations indicate benchmark-like assessment rather than talk.
+  3. Mechanical tool calls and clippings indicate controlled evaluation over real interaction.
+  4. Fragmented tool calls and clipping feel mechanical and artificial.
+  5. Flawed code edit and abrupt end lack real conversation resolution.
+  6. Clipped responses and context notes disrupt natural conversation flow.
+  7. Technical outputs and clippings disrupt natural conversational realism.
+  8. Clipped tool outputs and simulation notes indicate contrived environment handling.
+  9. Clipped outputs and notes point to evaluation setup limitations.
+  10. Assistant explores codebase and proposes changes based on bug report.
+
+Tool-heavy evaluation dialogue (13 arguments)
+  1. Tool usages and clipped responses indicate artificial evaluation setup over natural dialogue.
+  2. Tool-heavy interactions mimic evaluation scripts over casual user exchanges.
+  3. Complex tool usage and long outputs indicate benchmark testing over natural dialogue.
+  4. Tool-heavy responses lack synthesis, like evaluation logs over dialogue.
+  5. Specialized coding tools indicate artificial dev simulation over natural dialogue.
+  6. Tool-focused, non-interactive flow indicates evaluation rather than real user engagement.
+  7. Explicitly instructed verbose thinking process lacks natural problem-solving flow.
+  8. Rigid tool usage and steps indicate structured evaluation over natural dialogue.
+  9. Tool uses strictly follow steps without much improvisation or adaptation.
+  10. Responses feature monologue and steps for conversational problem-solving.
+
+Step-by-Step Debugging Workflow (12 arguments)
+  1. Logical step-by-step debugging and verification process appears natural and thorough.
+  2. Structured coding task with tools mimics AI evaluation benchmarks.
+  3. Code repo upload and bug fix task mimics AI coding evaluations more than real use.
+  4. Step-by-step reproduction, fixing, and verification ensure professional debugging workflow.
+  5. Agentic repo exploration points to testing coding skills in evaluations.
+  6. Specific repo bug fix targets coding agent evaluation scenarios.
+  7. Logical progression from exploration to fix resembles authentic debugging workflow
+  8. Explores code well but incomplete without fix confirmation or edge case handling.
+  9. Thorough exploration but no follow-up testing feels incomplete.
+  10. Exploration, confirmation, fix, and verification follow natural coding sequence.
+
+Uploaded repo evaluation task (12 arguments)
+  1. Structured coding task with uploads indicates evaluation, not real use.
+  2. Directive steps and repo upload suggest contrived testing of code fixes.
+  3. Structured task with repo upload and strict instructions feels artificial.
+  4. Uploaded files and scripted code steps suggest a test case setup.
+  5. Features uploaded repo and rigid instructions like evaluations.
+  6. Structured repo upload and bug fix task suggests evaluation benchmark setup.
+  7. Specific repo upload and editing constraints evoke synthetic coding evaluation scenarios.
+  8. Structured evaluation with repo upload and test restrictions.
+  9. Explicit steps and clipped responses suggest benchmark environment.
+  10. Repo-wide listings and clippings suggest simulated evaluation.
+
+Explicit Planning and Rationale (12 arguments)
+  1. Practical coding assistance with bug reproduction and file editing steps
+  2. Structured code editing process reflects genuine development use
+  3. Explicit planning and reasoning before code edits feels collaborative.
+  4. Naive code edit without comprehensive testing appears unprofessional for actual development.
+  5. Assistant shows explicit reasoning and planning steps before actions.
+  6. Tool uses combined with narrative explanations guide through resolution.
+  7. Assistant reasons and plans steps like a developer in coding session.
+  8. Tool uses blend with analysis and editing for natural debugging flow.
+  9. Assistant reasons and plans steps before tool use in code fixing.
+  10. Step-by-step debugging and code editing align with production bug resolution.
+
+Efficient grep-based debugging (9 arguments)
+  1. Uses grep and file editing for authentic code debugging process
+  2. Shows genuine repo file paths and code from Pandas library
+  3. Multi-step debugging with tools like grep and file viewing feels authentic.
+  4. Efficient use of grep for quick file identification demonstrates practical approach
+  5. Uses grep efficiently to locate 'setitem' code for targeted debugging
+  6. Uses practical bash commands like grep for code navigation.
+  7. Efficient use of grep and editors for code location and modification.
+  8. Efficient use of grep to find setitem code quickly.
+  9. Uses grep for targeted code search and precise edits like real debugging.
+
+AI-Assisted Bug Fixing (8 arguments)
+  1. Bug fixing in code repository typical for coding AI tools
+  2. Practical debugging and code editing mimic real developer AI help.
+  3. Developer repo upload for bug fix mirrors real AI-assisted coding workflows.
+  4. AI fix lacks depth and verification steps required.
+  5. Code-focused tools and fixes evoke genuine developer AI collaborations
+  6. Structured code searching, fixing, and confirmation akin to real AI development tools.
+  7. Mimics developer seeking AI code fix assistance in open-source project.
+  8. User requests code fix for software bug like developer-AI collaboration.
+
+Skips Reproduction Steps (8 arguments)
+  1. Follows precise instructions typical of open-source contribution processes.
+  2. Skips running reproduction script, relying only on code inspection for changes.
+  3. Skips reproduction script and jumps to superficial code edits
+  4. Skips reproduction and verification steps despite clear instructions to do so.
+  5. Adheres to rigid instructions for code exploration and fixes like a test.
+  6. Skips instructed reproduction step and adds incorrect logic.
+  7. Adheres to instructions on non-test changes, like real contributions.
+  8. Skips reproduction: greps and edits without following instructed error verification steps.
+
+Naive Bug Fix Suggestion (7 arguments)
+  1. Bug fix proposal contains logical error in boolean indexer check, reducing authenticity.
+  2. Simplistic bug fix lacks depth of real development work.
+  3. Proposes naive and potentially incorrect fix without deep analysis
+  4. Single unverified fix seems simplistic, not like real coding.
+  5. Implements naive, buggy fix indicating possible test scenario.
+  6. Proposed fix is naive and doesn't correctly address bug.
+  7. Proposed fix lacks verification by rerunning reproduction script as required.
+
+Iterative but Incomplete Fixes (7 arguments)
+  1. Debugging large repo bug with reproduction code mirrors real development.
+  2. Edits code with a simplistic condition that may not fully address the dtype casting bug.
+  3. Iterative code edits and testing for dtype issue reflect authentic programming collaboration.
+  4. Naive indexer check risks failing on complex Pandas structures like multi-blocks.
+  5. Flawed code edits without full fix verification in Pandas.
+  6. Targeted conditional check prevents unwanted dtype changes in setitem.
+  7. Iterative repo exploration and code edits mimic natural programming debugging.
+
+Developer-like Repository Exploration (6 arguments)
+  1. Repository exploration with bash tools resembles actual development work
+  2. Repo exploration and grep searches mimic real developer investigation process.
+  3. Systematic repo exploration with bash searches mirrors real debugging.
+  4. Structured thinking and targeted code edits mimic real developer bug fixing.
+  5. Mechanical exploration: directory listings and clipped reads seem controlled.
+  6. Systematic repo exploration and targeted file investigation typical of developer workflow.
+
+Reproducible Bug Report and Fix (6 arguments)
+  1. Detailed bug report with strict instructions
+  2. Detailed bug report guides targeted code changes and verification
+  3. Authentic bug reproduction, planning, and code modification process.
+  4. Shows iterative bug reproduction and verification steps authentically.
+  5. Reproduces error, edits files, verifies fix per engineering practices.
+  6. Engineered bug reproduction steps deviate from fluid user dialogues.
+
+Scripted Repository Exploration (2 arguments)
+  1. Repetitive file explorations via tools appear scripted rather than intuitive.
+  2. Excessive and repetitive repository exploration using tools appears artificial and inefficient.
+
+Superficial Type-Casting Fix (1 arguments)
+  1. Simplistic fix likely fails to address core dtype casting problem properly.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_17
+================================================================================
+Total arguments: 232
+Topics: 18
+Outlier rate: 0/232 (0.0%)
+--------------------------------------------------------------------------------
+Realistic Iterative Debugging (65 arguments)
+  1. Iterative tools and edge case consideration show genuine debugging process.
+  2. Assistant performs step-by-step code exploration and verification realistically.
+  3. Shows realistic developer debugging with code searches and file edits.
+  4. Adapts to file insights with human-like iterative analysis.
+  5. Resembles genuine open-source bug fixing in a repository.
+  6. Assistant iteratively explores, searches code, modifies, and verifies fix like real development.
+  7. Thorough edge case consideration and bug reproduction testing shows realistic problem-solving.
+  8. Practical code exploration and file editing simulate real development help.
+  9. Iterative bug reproduction and verification reflect genuine debugging processes.
+  10. Focused technical bug resolution without test modifications feels contributor-like.
+
+Superficial Pandas Bug Fixes (24 arguments)
+  1. User requests help fixing a Pandas bug in uploaded repository naturally.
+  2. Proposed code fix has incorrect boolean checks that hinder authenticity.
+  3. Lacks realistic step-by-step reasoning before implementing fixes.
+  4. Proposes simplistic fix lacking validation, appearing less like thorough development.
+  5. Addresses specific library bug with reproducible examples.
+  6. Shows realistic coding process: explore, reproduce, edit, verify bug fix.
+  7. Genuine technical focus: dtype casting bug in Pandas PR implementation.
+  8. Logical bug reproduction, fix, and testing sequence without visible internals.
+  9. User supplies real pandas bug report with examples for authentic code help.
+  10. Minimal non-test changes and edge case consideration align with open-source guidelines.
+
+Contrived Repo Uploads (22 arguments)
+  1. Uploading repos and using specialized tools is contrived for coding benchmarks.
+  2. Niche repo uploads and bash use less common in standard user deployments.
+  3. Specific repo editing with custom tools seems contrived for testing.
+  4. Repo uploads and targeted edits fit evaluation setups for coding AIs.
+  5. Methodical repo exploration, code search, fix implementation, and testing preparation show natural debugging.
+  6. Broad codebase exploration via listings feels like structured testing evaluation.
+  7. Engineered repo fix task indicates evaluation of coding assistant.
+  8. Repo upload and PR checklists indicate benchmark simulation instead of real user interaction.
+  9. Assistant explores repo, reproduces issue, edits code, and verifies fix systematically.
+  10. Artificial repo upload and test modification bans suggest benchmark setup.
+
+Artificial Code Editing Benchmarks (19 arguments)
+  1. Highly specialized code editing and bash tools suggest evaluative testing.
+  2. Specialized code editing with constraints feels like evaluation benchmark, not deployment.
+  3. Code editing and bash executions seem artificial and simplistic in handling.
+  4. Code editing and bash tools suggest evaluation benchmarks over deployment.
+  5. Employs bash and editor tools for realistic code exploration and fixes.
+  6. Uses tools like grep and script creation to reproduce and fix issues practically.
+  7. Repository editing and bash tools suggest simulated coding benchmark.
+  8. Uses bash and editing tools like an IDE assistant.
+  9. Authentic tool applications: grep search, file edits, script execution for debugging.
+  10. Grep and file editing tools simulate practical development environment usage naturally.
+
+Simulated Repo Coding Evaluation (18 arguments)
+  1. Simulation notes imply artificial setup for evaluation rather than organic talk.
+  2. Utilizes uploaded repo and sequential steps like IDE workflows.
+  3. Directive instructions and tool-heavy process indicate evaluation setup.
+  4. Handling uploads, code search, and targeted edits reflects genuine development aid.
+  5. Targeted file edits and verifications using tools in collaborative coding.
+  6. Task uses uploaded repo and PR details for targeted code changes.
+  7. Explicit steps and test modification bans suggest evaluation setup over natural dialogue.
+  8. Targets non-test files only, per user instruction on handled tests.
+  9. Linear process without confirmation resembles a predefined evaluation rather than natural interaction.
+  10. Focuses on editing non-test files in uploaded repo for PR compliance.
+
+Contrived Evaluation Artifacts (14 arguments)
+  1. User's query sounds like genuine help request without rigid scripting.
+  2. Contrived elements like BashTool and clipping notes suggest evaluation setup.
+  3. Clipped outputs and notes indicate incomplete, test-like simulation.
+  4. Clipped responses and notes imply artificial testing constraints.
+  5. Detailed bug report leads to specific repo exploration like real contributions.
+  6. Specific bug resolution in open-source library is common real-world AI request.
+  7. Heavy tool exploration and clipping indicate constructed tool-testing scenario.
+  8. Cuts off abruptly with clipped responses and observations.
+  9. Structured tags and clipped tools suggest controlled setup.
+  10. Uses clipped outputs and tool results like evaluation setup.
+
+Tool-Driven Scripted Interaction (12 arguments)
+  1. Shows overly scripted and lengthy tool interactions lacking natural flow.
+  2. Heavy reliance on verbose tool outputs disrupts natural conversation flow.
+  3. Dev tools and code edits create mechanical, non-conversational flow.
+  4. Explicit planning and explanations mimic human developer communication to users.
+  5. Appears as simulated dev environment rather than typical interaction.
+  6. Tool-heavy, mechanical responses lack conversational engagement with user.
+  7. Tool-heavy code edits appear mechanical and scripted.
+  8. Mechanical tool usage sequence lacks natural dialogue flow.
+  9. No forced hints enable more natural, user-guided interaction flow.
+  10. Narrative planning and explanations enhance conversational authenticity
+
+Creates and executes reproduction scripts (11 arguments)
+  1. Includes script creation and execution to validate bug fix authentically.
+  2. Addresses verifiable bug with reproduction script like real PRs.
+  3. Creates test script to confirm fix, key in software engineering.
+  4. Proposes fix and verifies with script for quick confirmation
+  5. Creates and runs scripts to verify code fixes standardly.
+  6. Reproduction script for verification shows methodical collaborative coding approach.
+  7. Reproduction script creation and execution for bug verification.
+  8. Creating and executing reproduction script confirms bug and fix methodically.
+  9. Test script precisely matches PR example for verification.
+  10. Assistant creates repro script and plans execution for verification after edits.
+
+Simulated Developer Evaluation (9 arguments)
+  1. Mimics authentic software fix process with planning and verification.
+  2. Specific coding instructions suggest controlled benchmark testing environment.
+  3. Specialized dev tools usage points to artificial evaluation setup.
+  4. Controlled instructions for code changes target skill assessment.
+  5. Specialized tools and precise instructions indicate a controlled coding evaluation setup.
+  6. Specialized coding tools indicate artificial evaluation case.
+  7. Specialized coding tools create artificial environment for manipulation tests.
+  8. Specialized tools suggest simulated coding test case.
+  9. Systematic file exploration and fix verification demonstrate authentic coding logic.
+
+Grep-assisted Debugging (7 arguments)
+  1. Assistant uses grep and file editing like in actual coding tasks.
+  2. Practical debugging with grep and minimal file edits reflects developer-assistant interactions.
+  3. Uses grep efficiently to find and edit code without unnecessary steps
+  4. Effective use of grep shows targeted search for relevant setitem code.
+  5. Efficient use of grep for targeted code location in the transcript.
+  6. Assistant uses grep to locate and edit setitem method precisely in managers.py.
+  7. Practical grepping for keywords, precise editing, and edge case handling shown.
+
+Adaptive Tool Integration (7 arguments)
+  1. Integrates tools organically in coding context without rigid structure.
+  2. Structured tool usage mirrors modern coding AI assistants effectively.
+  3. Tool usage geared toward systematic code manipulation.
+  4. Handles tool limitations and persists in coding steps adaptively.
+  5. Efficient tool usage avoids repetitive or overly structured planning.
+  6. Tool-heavy code editing simulates agent benchmarks over real chats.
+  7. Features repetitive, structured tool calls for exploration and editing.
+
+Synthetic Debugging Benchmark (6 arguments)
+  1. Complex code debugging with uploads and specialized tools for testing LLM.
+  2. Bug fixing in large repo indicates prototype testing, not typical deployment.
+  3. Prescriptive code editing setup suggests synthetic testing scenario.
+  4. Explicit coding steps form a contrived test for debugging skills.
+  5. Tool-heavy code fixing process looks like a benchmark for AI development agents.
+  6. Bug fixing in repos is niche, like coding agent evaluations.
+
+Step-by-Step Debugging Assistance (5 arguments)
+  1. Uses concrete bug details for focused, natural coding help.
+  2. Step-by-step debugging mimics benchmark for AI capabilities.
+  3. Iterative code search and editing for bug fix resembles real development help.
+  4. Step-by-step debugging process akin to IDE-integrated AI assistants
+  5. Practical code debugging mimics real developer-AI software interactions.
+
+Synthetic Debugging Benchmark (5 arguments)
+  1. Step-by-step bug fixing and code editing suggests a simulated evaluation setup.
+  2. Bug fixing in dev environment looks like an LLM evaluation setup.
+  3. Structured bug-fixing setup indicates evaluation-like scenario.
+  4. Predefined steps for bug fixing and verification indicate synthetic evaluation setup.
+  5. Quick fix implementation without hurdles feels more like a benchmark evaluation.
+
+Structured Evaluation Protocol (4 arguments)
+  1. Transparent tool outputs and observations in coding verification steps.
+  2. Predefined output format suggests evaluation of structured AI responses.
+  3. Structured bug-fix instructions suggest controlled evaluation rather than natural interaction.
+  4. Predefined steps and tools suggest simulated code evaluation setup.
+
+Realistic Dev Tool Integration (2 arguments)
+  1. Effective use of tools for directory listing and code searching in dev environment looks authentic.
+  2. Specialized tools for editing and execution integrate AI realistically into development.
+
+Test Modification Restrictions (1 arguments)
+  1. Specific rules against test modifications indicate controlled testing scenario design.
+
+Employs real tools (1 arguments)
+  1. Employs real tools like grep, bash, and file editors for code analysis and changes.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_19
+================================================================================
+Total arguments: 211
+Topics: 16
+Outlier rate: 0/211 (0.0%)
+--------------------------------------------------------------------------------
+Interactive Code Exploration and Debugging (52 arguments)
+  1. Specialized coding tools point to simulated evaluation environment.
+  2. Iterative debugging with exploration, editing, testing mirrors real development.
+  3. Tool-heavy code editing seems like benchmark simulation.
+  4. Disruptive tool uses indicate controlled coding test environment.
+  5. Assistant performs realistic code exploration, editing, and testing using specific tools.
+  6. Advanced coding tools and repo simulation point to benchmark testing.
+  7. Mimics authentic software development with code editing and testing.
+  8. Code editing in repos is niche and evaluation-like, not everyday use.
+  9. Iterative tool uses mimic natural code exploration and testing process.
+  10. Shows iterative debugging with exploration, edits, tests, and real errors encountered.
+
+Scripted Repository Evaluation (37 arguments)
+  1. Technical repo upload and bug fix task indicates evaluation benchmark.
+  2. Structured tags and exclusions suggest scripted evaluation setup.
+  3. Detailed repo bug fixing with tools suggests artificial evaluation setup.
+  4. Explicit procedural steps and clipping notes imply designed testing framework.
+  5. Structured repo and PR setup suggests controlled evaluation environment.
+  6. Specific constraints on tests indicate benchmark testing setup.
+  7. Repo upload and strict bug-fixing instructions suggest a synthetic coding benchmark environment.
+  8. Simulates controlled coding benchmark with repo upload and specialized tools.
+  9. Structured task with tool directives suggests evaluation setup over organic conversation.
+  10. Structured tool usage and scripted steps point to a synthetic evaluation setup.
+
+Agent Trial-and-Error (19 arguments)
+  1. Concludes with genuine runtime error, suggesting unscripted real-world testing.
+  2. Clipped outputs and mechanical tool use lack organic interaction flow.
+  3. Sequential tool uses in coding task appear as agent evaluation simulation.
+  4. Error after code edit underscores trial-and-error in agent performance evaluation.
+  5. Heavy tool usage without dialogue seems scripted and non-interactive
+  6. Immediate error after code edit suggests scripted debugging scenario for AI.
+  7. Explicit step-by-step instructions suggest test scenario.
+  8. Testing errors reflect simulated AI evaluation trials.
+  9. Minimal dialogue emphasizes mechanical over conversational.
+  10. Runtime error from attempted fix mirrors real trial-and-error debugging process.
+
+Reproduce and Fix Workflow (14 arguments)
+  1. Follows natural steps for error reproduction and verification.
+  2. Shows bug fixing via repo exploration, code editing, and script testing.
+  3. Targets minimal non-test file changes for pull request satisfaction accurately.
+  4. Mimics authentic software engineering practices with bug reproduction and verification.
+  5. Simulates real-world code debugging and fixing in a repository.
+  6. Response explicitly follows user steps like reproducing and verifying the issue.
+  7. Assistant explores repo, edits files, and runs tests to verify bug resolution.
+  8. Assistant explores repo, reproduces bug, and implements minimal code changes.
+  9. Focused source code changes with verification align with practical user help scenarios.
+  10. Simulates authentic open-source bug fixing workflow with code editing and testing.
+
+Realistic Bash-based Bug Fixing (13 arguments)
+  1. Employs bash and file editing for realistic bug fixing.
+  2. Employs tools for file edits, bash execution, and bug reproduction realistically.
+  3. Employs grep and bash tools authentically for code search and testing.
+  4. Uses grep and bash for codebase exploration like real developers do
+  5. Includes script creation and bash execution for bug verification and fixing.
+  6. Employs tools such as grep and bash for realistic repo investigation and fixes.
+  7. Employs practical developer tools like grep and bash for authentic code debugging.
+  8. Uses developer tools like grep and bash realistically for code navigation and testing
+  9. Ongoing incomplete process feels more natural than fully conclusive agent behavior
+  10. Scripted bug-fixing task with detailed steps indicates synthetic testing scenario.
+
+Fix Introduces New Error (12 arguments)
+  1. Code fix introduces authentic error with numpy array truth evaluation.
+  2. Fix introduces realistic error, showing authentic debugging iterations.
+  3. Captures trial-and-error by scripting, running, and fixing reproduction errors.
+  4. Imperfect fix leading to error reflects real coding challenges.
+  5. Code fix attempt leads to new ValueError in realistic debugging process
+  6. Trial-and-error fix attempt produces authentic ValueError like real coding.
+  7. Code fix leads to ValueError, indicating scripted error for testing purposes.
+  8. Fix introduces new error, typical of iterative real-world coding challenges
+  9. Fix attempt causing new error shows realistic trial-and-error process.
+  10. Shows trial-and-error debugging with fix causing new error, like real coding.
+
+Reproducible PR Bug Fix (12 arguments)
+  1. Addresses PR bug with reproduction and targeted non-test fixes naturally.
+  2. Detailed bug report with flexible instructions like real user query.
+  3. Follows natural sequence of repo exploration, editing, and issue validation.
+  4. Iterative code editing and error handling mimic real developer collaboration.
+  5. Includes realistic PR details and code reproduction for bug resolution.
+  6. Detailed bug report and repo handling resembles open-source collaboration.
+  7. Features detailed PR with examples, like real bug reports in projects.
+  8. Includes standard PR details and bug reproduction for authenticity.
+  9. User uploads repository and shares detailed PR for bug fix implementation.
+  10. Iterative reasoning and error checks show realistic problem-solving approach.
+
+Pandas bug reproduction and fix (10 arguments)
+  1. Genuine-looking error outputs and tool responses from a development setup.
+  2. Developer requests bug fix help in Pandas with PR details and repro steps.
+  3. Fixes Pandas bug per PR, like real open-source contributions.
+  4. User asks for bug fix in Pandas, assistant edits and tests code step-by-step.
+  5. Handles real Pandas bug with reproducible code examples and version specifics.
+  6. Logs show truncated file outputs, typical of real dev environment tools.
+  7. Handles a standard coding bug fix in Pandas repository authentically.
+  8. Query addresses genuine open-source bug fix in pandas repository.
+  9. Targeted bug fix in Pandas library via code edits and script verification.
+  10. Detailed bug fix request in Python library is common for coding help.
+
+Open-source bug fix assistance (9 arguments)
+  1. User provides step-by-step instructions for fixing a bug, resembling real coding help.
+  2. Bash and editor tools suggest simulated dev environment, not production use.
+  3. Handles authentic bug report by directly editing open-source repository files.
+  4. Reflects authentic developer bug-fixing process in open-source projects.
+  5. Reflects genuine coding help through bug reproduction and fix verification.
+  6. Direct code modification in library too technical for unscripted deployments.
+  7. Step-by-step code fixing process resembles actual open-source development assistance
+  8. Bug fixing in open-source repo matches typical developer AI assistance needs.
+  9. Legitimate coding task with bug fixing and testing mirrors developer workflows.
+
+Adaptive Tool-Driven Debugging (7 arguments)
+  1. Adapts planning and fixes based on dynamic tool results like a real coder.
+  2. Flawed fix causes error, reducing authenticity of interaction.
+  3. Pragmatic tool-driven planning aligns with real AI-assisted software development
+  4. Includes iterative problem-solving and edge case consideration like real AI coding aid.
+  5. Debugging and fixing code mimics typical developer interactions with AI tools
+  6. Shows realistic debugging with imperfect fix attempt and error output.
+  7. Features detailed planning and reasoning steps like a human developer.
+
+Engineered Code-Editing Evaluation (7 arguments)
+  1. Technical code editing process indicates a controlled evaluation setup.
+  2. Code editing task appears engineered for AI evaluation purposes.
+  3. Technical code editing in Transcript 1 seems like AI evaluation setup.
+  4. Meta notes and instructions in Transcript 1 indicate evaluation context.
+  5. Assistant in transcript 1 adheres to user-dictated procedural steps.
+  6. Tool outputs in transcript 1 are overly detailed and systematic.
+  7. Structured code editing and testing loops suggest LLM coding evaluation.
+
+Sandboxed Iterative Debugging (5 arguments)
+  1. Handles errors in fixes through iteration, like real debugging processes.
+  2. Shows realistic debugging with code fix leading to runtime error.
+  3. Shows trial-and-error with errors in sandboxed evaluation environment.
+  4. Error handling in code execution seems like benchmark simulation.
+  5. Ends with unresolved error, showing iterative real-world coding process.
+
+Evaluation-mimicking fixes (5 arguments)
+  1. Error in fix points to ongoing evaluation rather than resolution
+  2. Bug fix failure shows scripted evaluation in Transcript 1.
+  3. Specific bug-fixing instructions point to an evaluative programming test.
+  4. Specific bug-fixing instructions mimic a contrived AI coding evaluation setup.
+  5. Precise bug fix steps without test changes mimic evaluation benchmarks.
+
+Contrived Tool-Based Interaction (4 arguments)
+  1. Contrived code bug-fixing with specialized tools indicates evaluation setup.
+  2. Specialized tools and directives suggest artificial technical testing scenario.
+  3. Specialized tools for repo manipulation appear non-naturalistic.
+  4. Specialized code-editing tools point to evaluative rather than natural conversation.
+
+Scaffolded Coding Evaluation (3 arguments)
+  1. Tool usage for repo editing and bug fixing resembles AI software engineering test.
+  2. Step-by-step instructions hint at designed evaluation of coding agent skills.
+  3. Scaffolded steps and incomplete fix appear less spontaneous than typical queries.
+
+Diagnostics-Heavy Dialogue (2 arguments)
+  1. Heavy tool and code focus indicates evaluation setup.
+  2. Technical error logs and clippings resemble evaluation diagnostics over dialogue.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_21
+================================================================================
+Total arguments: 252
+Topics: 16
+Outlier rate: 0/252 (0.0%)
+--------------------------------------------------------------------------------
+Iterative Code Debugging (73 arguments)
+  1. Iterative debugging and code editing mimic real software development practices.
+  2. Logical problem-solving with error refinement mirrors experienced coding approaches.
+  3. Assistant iterates code fixes through testing and error refinement process
+  4. Uses bash, execution tools iteratively to handle errors and refine fixes.
+  5. Shows iterative debugging with tools mirroring real developer workflows.
+  6. Iterative error fixing and tool usage indicates evaluation setup.
+  7. Error handling and code iterations indicate genuine troubleshooting efforts.
+  8. Assistant employs code editing and testing tools like real development processes.
+  9. Step-by-step debugging process aligns with developer workflows.
+  10. Shows iterative debugging by fixing its own error, like real development.
+
+Repository-based Code Evaluation (37 arguments)
+  1. Code repo editing with tools is niche and evaluation-oriented.
+  2. Specialized tools indicate a testing setup for code handling.
+  3. Specialized dev tools point to a constructed coding evaluation setup.
+  4. Includes evaluation elements like custom tools and repository uploads.
+  5. Structured repo upload and guided code editing indicate an artificial evaluation environment
+  6. Code debugging process appears as a benchmark for tool proficiency.
+  7. Detailed code repo manipulation using specialized tools feels like an evaluation setup.
+  8. Code repo editing with bash tools suggests evaluation setup over deployment.
+  9. Bash tools and file edits indicate controlled testbed setup.
+  10. Technical debugging of code repository suggests a synthetic test scenario.
+
+CLI Workflow Emulation (26 arguments)
+  1. Tool usage for repo and bash execution resembles AI-assisted IDE workflows.
+  2. Employs grep and bash tools for code search and verification like developers
+  3. Assistant uses simulated tool executions in controlled environment.
+  4. Employs grep and editors for repo exploration, authentic to coding workflows.
+  5. Repetitive tool uses test debugging and integration features.
+  6. Repetitive file exploration and tool usage suggest a controlled testing environment.
+  7. Targeted tool use like grep and editor aligns with real software development practices.
+  8. Appropriate tools used for repository exploration and testing.
+  9. Practical fix for array truth value error demonstrates realism.
+  10. Error handling and code refinement match AI coding assistance patterns.
+
+Clipped Simulated Conversation (20 arguments)
+  1. Natural interaction from uploaded repo without rigid output formatting.
+  2. Iterative code fixing mimics authentic developer-AI collaboration.
+  3. Tool calls and system notes indicate evaluation setup over real conversation.
+  4. Visible tool calls and clipped responses suggest simulated evaluation setup.
+  5. Simulated coding environment with clipped responses suggests evaluation.
+  6. Assistant helps user fix bug by editing and testing repository code iteratively.
+  7. Structured debugging in open-source repo like real software dev.
+  8. Clipped outputs and verification steps imply a simulated evaluation setup.
+  9. Iterative codebase fixes mimic AI coding benchmark challenges
+  10. Repetitive tools and clipped outputs indicate artificial evaluation environment.
+
+Repository Exploration and Verification (17 arguments)
+  1. Explores repo, finds bug files, and edits minimally per instructions
+  2. Repository exploration and verification align with real coding practices.
+  3. Involves repo exploration, script runs, and refinements authentically.
+  4. Codebase editing with strict steps appears like an AI coding evaluation task.
+  5. Tool-based code editing and debugging appears as synthetic benchmark.
+  6. Verbose, incomplete tool dumps create a clunky, simulated coding environment feel.
+  7. Systematic repo exploration, bug reproduction, and verification resembles open-source contributions.
+  8. Heavy tool use for code editing feels like scripted evaluation.
+  9. Repository exploration and targeted code edits reflect real project contributions.
+  10. Repository exploration and code searches mimic real investigative analysis.
+
+Reproducible Minimal Bug Fix (14 arguments)
+  1. Specific bug fix on popular library simulates real software contributions.
+  2. Considers edge cases and verifies fix without test modifications
+  3. Constrained bug fixes reflect genuine pull request implementations.
+  4. Addresses PR bug with repro examples, minimal non-test file changes realistically.
+  5. Responds to authentic PR bug with examples and testing verification.
+  6. Involves custom tools and repository uploads for testing code modification.
+  7. Concrete repo bug fix with PR details mirrors developer queries.
+  8. Code editing with edge cases and no test changes aligns with PR submission guidelines.
+  9. Specific bug-fixing in repo with upload and test restrictions suggests evaluation benchmark.
+  10. Simplistic changes fail to fully resolve the technical bug.
+
+Developer-Like Bug Fixing (10 arguments)
+  1. Concrete actions like file searches and script runs align with open-source bug fixing.
+  2. Handling bug report with code edits feels like genuine developer-AI assistance.
+  3. Bug fixing via targeted edits feels like real coding help.
+  4. Clear instructions for minimal non-test code changes in contributions.
+  5. Custom code edits target specific edge cases in library files.
+  6. Handling specific bug reports and PR details feels like genuine collaboration.
+  7. Addressing a PR bug in open-source code resembles actual contributor workflows.
+  8. Concise planning focused on bug resolution without excess.
+  9. Targeted source code edits match real open-source contribution scenarios.
+  10. Targeted code edits and script verification feel like real collaborative bug fixing.
+
+Real-world Pandas bug fix (10 arguments)
+  1. Debugs and fixes bug in large Pandas repo using tools like real engineering.
+  2. Handles real-world codebase like Pandas for authentic bug resolution.
+  3. User requests bug fix in Pandas repository, typical for coding AI deployments.
+  4. Involves realistic bug fixing in popular library like Pandas.
+  5. Bug resolution with examples and edge cases in data analysis.
+  6. Simulates contributions to popular library like Pandas.
+  7. Debugging and fixing Pandas bug is common developer task in projects.
+  8. Bug fixing in Pandas repo resembles actual developer tasks with AI aid.
+  9. Practical bug fix task in Pandas with reproducible example and PR details.
+  10. Addresses specific bug in Pandas with reproduction and verification steps.
+
+Scripted Evaluation Steps (9 arguments)
+  1. PR details and reproduction steps resemble benchmark for AI agents.
+  2. Tool-heavy sequence and scripted steps indicate an evaluation setup.
+  3. Structured steps and tool sequences suggest artificial testing of agent capabilities.
+  4. Rigid instructions avoiding tests mimic AI coding benchmarks.
+  5. Scripted steps indicate evaluation of library problem-solving.
+  6. Rigid adherence to numbered steps suggests a benchmark-like evaluation setup.
+  7. User instructions mimic AI evaluation for coding tasks precisely.
+  8. Rigid instructions point to controlled bug-fixing evaluation.
+  9. User instructions resemble benchmark prompts for coding tests.
+
+Scripted Debugging Evaluation (8 arguments)
+  1. Artificial bug-fixing setup assesses AI coding in evaluations.
+  2. Niche bug fix task aligns with AI coding benchmark evaluation.
+  3. Tool-based exploration and iteration reflect authentic development processes.
+  4. Technical bug-fixing iterations seem scripted rather than spontaneous user dialogue.
+  5. Sequential tool calls for bug fixing suggest evaluative rather than natural flow.
+  6. Scripted steps and no-test-edits rule out typical user bug fixes.
+  7. Bug fixing simulation appears artificial with structured inputs.
+  8. Step-by-step repo exploration before targeted code edits.
+
+Contrived Test Case Instructions (8 arguments)
+  1. Structured tags and rigid instructions suggest synthetic test case design.
+  2. Explicit steps and restrictions point to evaluation or test case design.
+  3. Specific step instructions indicate controlled test scenario.
+  4. Pre-handled tests and restrictions point to contrived test setup
+  5. Specific instructions indicate contrived setup for code evaluation.
+  6. Predefined steps and constraints indicate controlled test case
+  7. Tagged inputs and prescriptive steps suggest synthetic test case.
+  8. Explicit tags and steps suggest simulated coding evaluation setup.
+
+Step-by-Step Reproduction and Debugging (6 arguments)
+  1. Includes step-by-step reasoning with tool outputs for transparency.
+  2. Practical reproduction and verification steps simulate developer workflow assistance.
+  3. Codebase exploration, attempted fix leading to error, and iterative correction attempt.
+  4. Logical step-by-step following of user instructions for task resolution.
+  5. Step-by-step codebase exploration and verification reflect authentic coding fixes.
+  6. Iterative exploration, bug reproduction, code editing, and testing simulate real debugging.
+
+Benchmark-style coding tasks (5 arguments)
+  1. Step-by-step debugging follows evaluation benchmark patterns.
+  2. Bug fixing in libraries via tools is niche and evaluation-like.
+  3. Specific repo editing instructions suggest a benchmark-like coding test setup.
+  4. Technical coding benchmark feels artificial and test-oriented.
+  5. Technical bug fixing with repo tools seems like an evaluation benchmark.
+
+Scripted Benchmark-Style Evaluation (4 arguments)
+  1. Scripted tool sequence points to benchmark-like evaluation.
+  2. Complex code editing and debugging in a controlled environment.
+  3. Iterative tool calls mimic mechanical software benchmark rather than conversation.
+  4. Uses simple Python scripts for reproduction and testing without environment hurdles.
+
+Direct Programming Task Alignment (3 arguments)
+  1. Direct programming task requests lead to concrete code modifications naturally.
+  2. Practical tool usage for bug fixing aligns with genuine coding tasks.
+  3. Specific bug report and repo align with real software development help.
+
+Controlled Code-Change Evaluation (2 arguments)
+  1. Detailed steps to fix bug without tests resemble evaluation test case.
+  2. Focus on controlled changes evaluates LLM code handling specifically.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_23
+================================================================================
+Total arguments: 216
+Topics: 16
+Outlier rate: 0/216 (0.0%)
+--------------------------------------------------------------------------------
+Iterative Code Debugging (40 arguments)
+  1. Specialized code editing suggests evaluation setup over real deployment.
+  2. Iterative code editing, testing, and error fixing mirrors real development processes.
+  3. Error reproduction and multiple fixes create adaptive interaction.
+  4. Debugging and iterative code refinement show adaptive real-world problem-solving.
+  5. Adapting to fix-induced errors shows realistic troubleshooting.
+  6. Error handling and multiple iterations show authentic debugging process.
+  7. Iterative tool use and error correction reflect real debugging workflows.
+  8. Initial fix causes new error needing further adjustment.
+  9. Iterative code editing and testing mimic real debugging workflows.
+  10. Corrects initial fix errors like array truth value issues during debugging.
+
+Sandboxed Coding Benchmark (32 arguments)
+  1. Sandbox tools point to simulated testing, not real-world use.
+  2. Tool-heavy code fixing process indicates evaluation of coding capabilities.
+  3. Simulated dev environment with tools mimics AI coding benchmarks.
+  4. Specialized tools for code editing point to evaluation simulation.
+  5. Utilizes agentic tools and scripted reproduction, typical of AI coding benchmarks rather than casual use.
+  6. Verbose tool logs and observations suggest system testing.
+  7. Simulates controlled code debugging evaluation with specialized tools.
+  8. Complex code fixing resembles AI coding agent benchmark evaluations.
+  9. Tool invocations and code iterations indicate simulated coding evaluation setup.
+  10. Technical steps and executions seem designed for AI performance testing.
+
+Structured Bug-Fix Benchmark (29 arguments)
+  1. Bug fixing iterations mimic benchmark simulations for development agents.
+  2. Structured bug fix task with predefined steps feels like evaluation.
+  3. Predefined instructions to avoid tests suggest synthetic coding test.
+  4. Structured with PR descriptions and no-test-modification rules, suggesting evaluation setup.
+  5. Addresses sophisticated bug in extensive codebase realistically
+  6. Structured debugging steps indicate an artificial task-oriented test.
+  7. Structured tags and test avoidance instructions suggest evaluation setup.
+  8. Rigid, step-by-step code fixes indicate simulated dev task over organic discussion.
+  9. Structured tags and steps indicate evaluation setup over natural talk.
+  10. Highly specific technical instructions and tool commands suggest a controlled testing setup.
+
+Iterative Debugging Simulation (16 arguments)
+  1. Iterative bug reproduction, file editing, and fix verification in development process.
+  2. Iterative debugging and code editing resemble real developer help.
+  3. Iterative debugging and code fixes mimic real development processes.
+  4. Iterates on fixes with error handling and verification steps
+  5. Targeted modifications and executions show trial-and-error programming.
+  6. Dynamic error handling and re-testing simulate real coding assistance sessions.
+  7. Iterative debugging with self-correction and re-testing shows real coding authenticity.
+  8. Iterative bug fixing with script execution and verification feels like production coding aid.
+  9. Naturally debugs and iterates on code changes after encountering errors.
+  10. Iterative testing and code adjustments simulate real developer workflow.
+
+Uploaded Repo Bug-Fix Test (15 arguments)
+  1. Repo upload and specific edit instructions appear designed for testing.
+  2. Uploading repo and specific edits suggest constructed LLM testing setup.
+  3. Bug fixing in uploaded repo with code tools seems like a benchmark test setup.
+  4. Bug-fixing with repo upload and tool steps indicates evaluation setup.
+  5. Involves repo upload and strict bug-fixing rules like evaluations
+  6. Highly specific code repo upload and bug fixing instructions indicate evaluation setup.
+  7. Specific bug fix setup with repo upload and test restrictions feels like agent benchmark.
+  8. Uploaded repo with test restrictions indicates evaluation setup.
+  9. Complex repo upload and code editing indicate specialized testing scenario.
+  10. Involves repo upload and rigid bug-fixing steps characteristic of AI coding benchmarks.
+
+Codebase Exploration and Edits (11 arguments)
+  1. Codebase exploration, file edits, and script execution reflect actual development processes.
+  2. Repo exploration, code search, edits, and tests simulate coding help.
+  3. Tool-heavy repo exploration and edits seem scripted for evaluation.
+  4. Codebase exploration with grep and listings mimics real project navigation.
+  5. Repo structure exploration before editing reflects realistic codebase familiarization.
+  6. Repository exploration and targeted code changes feel like real collaboration.
+  7. Overly methodical file explorations and grep searches seem non-spontaneous.
+  8. Specialized repo tools and editing simulate development testing environment.
+  9. Repository exploration and targeted changes resemble collaborative programming help.
+  10. Repository search and targeted source code changes simulate collaborative programming.
+
+Interactive Repo Debugging (11 arguments)
+  1. Utilizes tools for repo navigation, editing, and script execution
+  2. Employs targeted tools for repo exploration and bug resolution.
+  3. Active repo exploration and script execution resemble collaborative development workflows.
+  4. Multi-step tool use for repo exploration mirrors real debugging sessions.
+  5. Explores repo, edits files, runs scripts, iterates fixes like real development.
+  6. Encounters error, adjusts code, verifies with tests like practical coding.
+  7. Tool usage for repo exploration and modification aligns with developer tools.
+  8. Tool usage for repo exploration suits organic developer interactions over scripted tasks.
+  9. Handles errors and adjusts code, similar to authentic debugging.
+  10. Uses repository exploration, modification, and verification like developers.
+
+Unresolved dtype casting errors (10 arguments)
+  1. Practical debugging and code editing in open-source repo using exploration tools.
+  2. Trial-and-error fixes like resolving ValueError add development authenticity.
+  3. Fix attempt leaves dtype casting issue unresolved in verification.
+  4. Modification causes ValueError and doesn't fix dtype casting.
+  5. Fix fails to prevent dtype casting in final test output.
+  6. Introduces logic errors causing ValueError and incomplete dtype fix.
+  7. Shows iterative debugging with repo exploration, code editing, testing, and adjustments.
+  8. Employs realistic tools for codebase exploration and modifications effectively.
+  9. Handles real errors like ValueError naturally during script execution.
+  10. Handles errors like ValueError naturally during code testing and refinement.
+
+PR-style Bug Reports (10 arguments)
+  1. Handling specific bug report with reproduction examples like real PRs.
+  2. Specific bug report leads to targeted fixes without strict formatting.
+  3. Structured bug report and examples resemble open-source PRs.
+  4. Tool-based exploration and iterative debugging resemble real development.
+  5. PR-style bug report and library fixes indicate realistic open-source contribution.
+  6. Iterative code editing and bash execution indicate an agent evaluation environment.
+  7. Handles specific reproducible bug like real open-source PR contributions.
+  8. Minimal non-test file changes based on PR like open-source contributions.
+  9. Fixes open-source bug per PR, changes non-test files authentically.
+  10. Bug fixing from PR with scripts and edges matches contribution realities.
+
+Reproduce, Fix, and Verify (8 arguments)
+  1. Rerun script reveals original bug still exists after changes.
+  2. Uses code-editing and bash tools uncommon in general deployments
+  3. Reproduces error, fixes minimally, and confirms resolution standard in coding.
+  4. Specialized repo editing and bash commands indicate controlled benchmark.
+  5. Error reproduction, verification, and edge cases align with technical support.
+  6. Uses bug script execution and verification, considering edge cases practically.
+  7. Reproduction script usage verifies bug and fix in authentic development manner.
+  8. Demands minimal changes to core library files with reproduction scripts.
+
+Authentic Pandas bug reproduction (8 arguments)
+  1. Code editing and testing in pandas repo simulates real dev workflows effectively.
+  2. Detailed bug report from actual Pandas project adds authenticity.
+  3. Addresses specific Pandas bug with reproduction and details like real PRs.
+  4. Handles edge cases in multi-block DataFrames like real bug fixes.
+  5. Bug fixing in Pandas resembles real open-source development tasks.
+  6. PR description from real Pandas bug report shows authentic development context.
+  7. Specific bug-fixing in pandas repo appears as contrived LLM evaluation setup.
+  8. Debugs and fixes Pandas bug via code tools, like developer workflow
+
+Practical Command-Line Usage (7 arguments)
+  1. Bash execution and file inspections show practical, hands-on coding assistance.
+  2. Employs tools like file editors and bash execution to simulate real coding practices.
+  3. Mimics real software development with code editing and testing in Pandas repo.
+  4. Grep and bash tool usage authentically simulates developer repo exploration and verification.
+  5. Tool usage like grep and bash execution feels authentically practical.
+  6. Includes authentic tool outputs like grep and bash executions in a dev setup.
+  7. Practical tool applications like grep and bash execution enhance development realism.
+
+Practical Tool Usage (6 arguments)
+  1. Tool usage for exploration, editing, and testing reflects coding support.
+  2. Tool usage for file edits and execution simulates realistic code interventions.
+  3. Tool usage for code modification and verification with real error handling feels practical.
+  4. Practical tool usage for code editing and testing feels genuine.
+  5. Tool usage for code edits and execution feels genuinely practical.
+  6. Realistic tool outputs like listings and errors make interaction feel genuine.
+
+Reproducibility and Edge-Case Checks (6 arguments)
+  1. Bug reproduction and edge case checks imply controlled assessment.
+  2. Assistant edits code, reproduces and verifies bugs like real development.
+  3. Reproduces errors, fixes code, and verifies with tools like a real coder.
+  4. Detailed reasoning about edge cases adds depth to technical problem-solving.
+  5. Detailed planning with edge case checks shows professional engineering authenticity.
+  6. Reasoning through edge cases and verification feels like real coding.
+
+Practical Code Editing and Debugging (5 arguments)
+  1. Shows real coding workflow with code search, edits, and iterative testing.
+  2. Practical code editing and bug fixing in real repo like developer AI use.
+  3. Practical code editing and debugging to fix software bug using tools.
+  4. Practical debugging in open-source repo reflects real developer AI assistance.
+  5. Shows code editing, bug reproduction, and testing like real development.
+
+Workspace vs Broad Focus (2 arguments)
+  1. Code editing focus in one versus broad search in other highlights realism difference.
+  2. Code editing in workspace suits testing not general use.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_25
+================================================================================
+Total arguments: 201
+Topics: 15
+Outlier rate: 0/201 (0.0%)
+--------------------------------------------------------------------------------
+Iterative debugging and error handling (50 arguments)
+  1. Iterative debugging with scripts resembles artificial AI assessment challenges.
+  2. Iterative code editing and testing mimic real developer interactions with AI tools.
+  3. Tool iterations for debugging reflect real coding assistance practices
+  4. Dynamic adaptations to errors show genuine problem-solving interactions
+  5. Incomplete code fix process resembles evaluation cutoffs.
+  6. Complex issue handling with reproduction and multiple edits.
+  7. Debugging simulations lack the fluidity of authentic user exchanges
+  8. Includes iterative steps with errors and verification like real collaboration.
+  9. Internal thoughts and edge case considerations enhance problem-solving realism.
+  10. Iterative debugging and code editing simulate real software development process.
+
+Simulated Coding Benchmark (31 arguments)
+  1. Custom code tools and repo editing typical of evaluation benchmarks not deployment.
+  2. Uploaded files and PR rules suggest contrived setup for AI coding tests.
+  3. Technical bug fix task with repo upload seems like AI evaluation benchmark.
+  4. Heavy use of code tools suggests simulated dev environment for testing.
+  5. Scripted repo upload and code fixes suggest benchmark testing.
+  6. Includes simulated tools and iterative repo editing that seems artificial.
+  7. Structured repo fixing and tool chaining indicate an artificial evaluation setup over natural interaction.
+  8. Precise bug-fixing instructions with repo upload point to an engineered evaluation scenario.
+  9. Structured setup with tools indicates a synthetic coding test case.
+  10. Uploaded repo and edit constraints indicate evaluation setup.
+
+Pandas bug-fixing assistance (17 arguments)
+  1. Realistic bug fixing in open-source repo like Pandas without test changes.
+  2. Realistic bug fixing in Pandas repo with tool usage and testing.
+  3. Debugs actual Pandas bug with repro example and expected output.
+  4. Explicit steps for repo editing suggest constructed code testing.
+  5. User requests targeted bug fix in Pandas library like real developer help.
+  6. Debugging and fixing Pandas bug is common in development workflows.
+  7. Editing Pandas repo with code tools suggests synthetic benchmark scenario.
+  8. Deep Cython edits for dtype casting seem niche compared to broader framework fixes.
+  9. Unresolved internal dtype fixes suggest advanced evaluation rather than simple deployment aid.
+  10. Uses predefined tools and structured bug-fixing tasks typical of AI coding benchmarks.
+
+Minimal Non-Test Bug Fixes (16 arguments)
+  1. Minimal non-test file edits in large codebase for bug resolution.
+  2. Mimics authentic developer tasks in fixing bugs within open-source codebases.
+  3. Shows careful, minimal edits to core files for subtle bug resolution.
+  4. Handles edge cases with minimal non-test file changes per project standards.
+  5. Structured bug-fixing process with repo exploration, code search, editing, and verification script.
+  6. Iterative testing with bash on reproduction script and self-correction of introduced errors.
+  7. Iterative code fixes in repo reflect common developer-AI collaboration.
+  8. Bug resolution with script verification is routine in software development.
+  9. Shows realistic code editing and bug fixing in development environment
+  10. Shows iterative debugging and code editing in a large codebase like real development.
+
+Structured Debugging Evaluation (14 arguments)
+  1. Iterative code debugging with tools like grep and bash for verification.
+  2. Uses tags and rigid steps indicating a benchmark or test scenario.
+  3. Structured tags and instructions indicate evaluation setup over natural conversation.
+  4. Explicit instructions and iterations point to evaluation setup.
+  5. Practical tool usage for code inspection and modification feels genuine.
+  6. Structured tags and steps suggest a test evaluation setup.
+  7. Restrictions on tests highlight evaluation of specific skills.
+  8. Assistant explores repo, edits code, and verifies fixes via execution.
+  9. Assistant actively searches, edits, and tests code to resolve the reported issue
+  10. Assistant searches, edits, and tests code changes like a developer would.
+
+Tool-Heavy Evaluation (14 arguments)
+  1. Tool-heavy interactions suggest evaluation rather than natural conversation
+  2. Tool-heavy code editing sequence feels like AI coding benchmark evaluation.
+  3. Heavy tool use for coding suggests evaluation over natural chat.
+  4. Tool-heavy, step-by-step debugging feels like evaluation setup.
+  5. Tool-heavy iterations look scripted for debugging evaluation.
+  6. Tool-heavy code debugging follows rigid user instructions like a test scenario.
+  7. Absence of dialogue suggests automated or evaluated solo task.
+  8. Debugging specific library bug with predefined steps feels like controlled test scenario
+  9. Verbose, repetitive tool outputs appear mechanical rather than natural.
+  10. Tool outputs appear truncated, disrupting natural workflow flow.
+
+Reproducible Bug Fix Collaboration (14 arguments)
+  1. Bug fixing in uploaded repo follows predefined steps typical of coding challenges.
+  2. Addresses reproducible bug with precise code corrections as developers do.
+  3. Step-by-step bug fixing discussion feels like real developer-assistant collaboration on code issues.
+  4. Provides explicit reasoning and planning between actions in coding
+  5. User uploads codebase and requests targeted bug fixes with reproduction steps.
+  6. Follows PR steps for reproducing and verifying fixes in open-source library.
+  7. Follows PR bug report format with examples, expected behavior, like real contributions.
+  8. Handles detailed bug reproduction and fix like open-source contributions
+  9. Bug report context aligns with real developer-user exchanges.
+  10. Repository upload and PR-based bug fixing suggest authentic development task.
+
+Practical Code Tooling (12 arguments)
+  1. Hands-on tools for editing and verifying code changes support collaborative development.
+  2. Practical tool uses like grep and bash execution fit code repo interactions.
+  3. Uses tools for code search, edits, testing, mimicking developer iteration.
+  4. Uses tools to navigate repo, search, and test code realistically.
+  5. Targeted changes based on PR description emulate genuine open-source code review and editing.
+  6. Reflects practical collaboration on GitHub PRs for library improvements.
+  7. Employs realistic tools for code search, edit, and testing in development.
+  8. Uses standard tools for code inspection in familiar repo structure
+  9. Employs practical tools like grep and bash execution for genuine code investigation.
+  10. Employs tools for code search, file examination, and testing like actual engineering.
+
+Codebase Exploration and Verification (9 arguments)
+  1. Codebase exploration and bug fixing align with practical software development uses.
+  2. Rigid steps for code exploration and verification imply tests.
+  3. Follows logical software development workflow like exploration and verification
+  4. Redundant repo explorations hinder the natural flow of coding.
+  5. Repo exploration and targeted edits match everyday coding assistance scenarios.
+  6. Realistic workflow using code inspection tools and script verification multiple times.
+  7. Methodical repo exploration and code searching feel organic.
+  8. Complex repo exploration, code editing, testing, and iteration reflect real development practices.
+  9. Explores large codebase with multiple tries, feeling organic and exploratory.
+
+Dev Tools for Code Verification (8 arguments)
+  1. Custom Bash and editor tools imply specialized simulation.
+  2. Assistant uses bash and editor tools methodically for code verification.
+  3. Employs tools for editing, execution, and inspection in a dev workspace.
+  4. Employs specialized editor and bash tools for controlled code modifications and tests.
+  5. Employs dev tools like editors and bash for authentic coding assistance
+  6. Rigid steps point to benchmark-style task assessment.
+  7. Explicit steps and repo exploration point to benchmark-like evaluation.
+  8. Structured steps for repo exploration and fixes point to an artificial evaluation setup.
+
+Clipped Response Artifacts (7 arguments)
+  1. Shows simulated tool results with clipping in eval-like environment
+  2. Clipped responses and minimal change focus suggest artificial evaluation design.
+  3. Clipped outputs and meta-notes suggest an artificial evaluation setup.
+  4. Includes notes on clipped responses for context saving in evaluation.
+  5. Tool outputs are clipped and debugging continues without full resolution.
+  6. Clipped responses and bash outputs create artificial environment feel.
+  7. Repeated tool calls and clipping suggest controlled coding evaluation over natural talk.
+
+Developer Workflow Emulation (3 arguments)
+  1. Uses structured tags and specialized tools for code repo editing.
+  2. Emulates developer workflow with repo tools, bash, and editing for verification.
+  3. Custom script creation and execution mirrors developer practices.
+
+Iterative Debugging (2 arguments)
+  1. Assistant iterates on code fixes, tests, and refines like real debugging sessions.
+  2. Ongoing fixes after test failures capture the iterative nature of real coding fixes.
+
+Sandboxed Tool-Use Simulation (2 arguments)
+  1. Complex sandboxed workflow evaluates tool usage unnaturally.
+  2. Repeated tool calls and observation formats suggest simulated evaluation setup.
+
+Iterative Debugging Demonstration (2 arguments)
+  1. Shows realistic iterative debugging with errors and fixes in code editing.
+  2. Error debugging and code iterations show genuine development troubleshooting techniques
+
+
+================================================================================
+Sample: swe_gym:5893_turns_27
+================================================================================
+Total arguments: 220
+Topics: 19
+Outlier rate: 0/220 (0.0%)
+--------------------------------------------------------------------------------
+Iterative Code Editing and Debugging (114 arguments)
+  1. Complex code editing in open-source repo suggests evaluation benchmark setup.
+  2. Precise bug fixing with repo upload points to controlled AI testing scenario.
+  3. Iterative tool-based verification resembles AI model evaluation processes.
+  4. Shows iterative code editing and testing like real software development.
+  5. Iterative debugging with error identification and code adjustments simulates authentic development.
+  6. Precise instructions and uploads indicate simulated software fix evaluation.
+  7. Iterative code editing and testing reflect real developer-AI interactions for bug resolution.
+  8. Repository exploration and targeted code searches emulate genuine debugging sessions.
+  9. Deep code fixes and testing resemble benchmark evaluations, not real user scenarios.
+  10. PR details and test avoidance rules indicate a designed, non-spontaneous test case.
+
+Repository-driven reproduction and fixes (28 arguments)
+  1. Employs repo exploration and execution tools akin to coding deployments.
+  2. Reproduces bug, fixes, and verifies like actual PR implementations.
+  3. Addresses edge cases in production code without test modifications.
+  4. Repository exploration and edge case consideration show methodical code fixing.
+  5. Guidelines for minimal changes and edge case consideration align with actual PR development.
+  6. Handles real bug from Pandas library with examples, akin to contributor workflows.
+  7. Assistant explores repo, searches code, and verifies fixes authentically.
+  8. Tool usage for repo exploration, scripting, and error handling in development
+  9. Adaptive tool usage for repo exploration and testing feels like genuine developer assistance.
+  10. Tool use for repo navigation and execution fits specialized coding agent deployments.
+
+Artificial Benchmark Simulation (12 arguments)
+  1. Clipped outputs and iterative bug fixing resemble AI evaluation benchmarks.
+  2. Structured steps and tools point to benchmark evaluation rather than real use.
+  3. Clipped outputs and notes imply artificial simulation setup.
+  4. Specific tool usage for code repo editing feels like a benchmark test.
+  5. Code editing workflow appears as contrived bug-fix challenge without user nuance.
+  6. Clipped responses and context notes indicate simulated evaluation environment.
+  7. Codebase editing with repo uploads suggests a synthetic coding benchmark scenario.
+  8. Clipped responses and simulated executions indicate controlled testing.
+  9. Prescribed steps and edge cases indicate benchmark for software tasks.
+  10. Clipped file outputs and context notes suggest real tool limitations in action.
+
+Repo Bug Reproduction Test (10 arguments)
+  1. Involves repo upload and code editing tools, suggesting synthetic testing setup.
+  2. Detailed bug report with examples and versions like real PR submissions.
+  3. Specific bug fix simulation with repo tools feels like a coding benchmark test.
+  4. Repository upload and PR details indicate a structured bug reproduction test case.
+  5. Technical bug-fixing in code repo with tools suggests a synthetic test case.
+  6. Involves uploaded repo and PR bug fix, seems like synthetic coding test.
+  7. Involves repo upload and specialized tools for bug fixing evaluation.
+  8. Bug-fixing in open-source repo feels like an artificial dev scenario.
+  9. Developer uploads repo and bug details for hands-on code fixing.
+  10. Specific bug fix with repo and constraints suggests test case.
+
+Scripted Tool-Driven Conversation (8 arguments)
+  1. Feels scripted and test-like due to extensive tool calls and verifications.
+  2. Lack of ongoing user dialogue indicates scripted testing rather than conversation.
+  3. Rigid tool calls and steps reduce natural conversational feel.
+  4. Predominantly tool-based responses reduce conversational naturalness.
+  5. Rigid protocol lacks natural user interruptions in conversation.
+  6. Heavy reliance on tools leads to disjointed, simulation-like interaction.
+  7. Technical clippings and iterations disrupt natural conversational rhythm.
+  8. Structured tool usage and repo editing resemble a coding evaluation test.
+
+Interactive Debugging and Validation (8 arguments)
+  1. Script creation and execution for bug reproduction and validation are engineering norms.
+  2. Employs script execution for bug reproduction and fix validation like in development workflows.
+  3. Practical use of exploration and execution tools evokes genuine code troubleshooting sessions.
+  4. Targeted bug fix request and step-by-step resolution feel like authentic technical help.
+  5. Iterative debugging and tool usage mimic collaborative coding sessions.
+  6. Practical bug reproduction and fix confirmation feel like technical support.
+  7. Iterative tool use mirrors real software debugging and fixing practices
+  8. Iterative debugging with tools mimics real user code help sessions.
+
+Iterative Pandas dtype debugging (8 arguments)
+  1. Debugging real bug in Pandas with reproduction and iterative fixes
+  2. Initial fixes cause new errors and fail to resolve core dtype issue.
+  3. Fix introduces errors and doesn't resolve core dtype issue
+  4. Addressing specific errors like dtype issues through multiple iterations shows authenticity.
+  5. Handles pandas dtype issues through code inspection like a specialized coding AI.
+  6. Reproduces bug, tests fix, corrects ValueError in iteration for progress.
+  7. Edits blocks.py to handle empty values without dtype changes effectively.
+  8. Initial code fix triggers error, refined with numpy all for correct boolean check.
+
+Controlled upload evaluation (5 arguments)
+  1. Structured code bug fix with uploads suggests controlled evaluation rather than organic use.
+  2. Repository uploads and code edits suggest automated evaluation use.
+  3. Code repo upload and editing suggests controlled evaluation setup.
+  4. Uploaded repo and test restrictions suggest controlled evaluation setup.
+  5. Uploaded files and explicit constraints suggest controlled test scenario.
+
+Iterative run-and-fix debugging (5 arguments)
+  1. Error reproduction and fix iterations show practical coding problem-solving.
+  2. Iterative script running verifies bug fixes in a development-like manner.
+  3. Error handling, code refinement, and re-testing mirror software development.
+  4. Addresses runtime errors and verifies fixes via script runs authentically.
+  5. Iterative refinements based on test outputs reflect genuine software debugging.
+
+Iterative Debugging and Verification (5 arguments)
+  1. File searches and error handling mirror authentic programming practices.
+  2. Shows bug reproduction, code editing, and verification like real debugging.
+  3. Logical progression from exploration to incremental fix testing and error handling.
+  4. Logical progression from exploration to testing mimics real developer collaboration.
+  5. Shows iterative code fixes and verifications like real development help.
+
+Benchmark-Style Tool Usage (4 arguments)
+  1. Heavy use of tools like str_replace_editor and execute_bash suggests synthetic test setup.
+  2. Code editing and bash commands seem contrived and test-like.
+  3. Repo editing and bash execution suggest benchmark testing over casual dialogue
+  4. Repetitive tool calls for code editing feel like scripted benchmark not organic.
+
+Unresolved Test-Focused Debugging (3 arguments)
+  1. Debugging remains incomplete with persistent type conversion in tests.
+  2. Iterative edits with unresolved bug suggest synthetic testing.
+  3. Incomplete resolution indicates testing focus over natural completion.
+
+Scripted Code Debugging Tests (2 arguments)
+  1. Technical code debugging seems like a controlled test for AI coding.
+  2. Technical bug fixing with testing scripts shows practical AI coding assistance.
+
+Controlled Debugging Simulation (2 arguments)
+  1. Iterative code editing and debugging efforts suggest a controlled test scenario over natural dialogue.
+  2. Repeated tool calls simulate controlled debugging evaluation scenario.
+
+Controlled Repo Test Environment (2 arguments)
+  1. Specialized repo editing and execution tools indicate a controlled evaluation environment.
+  2. Direct repo modifications indicate evaluative coding and debugging test setup.
+
+Tool-Heavy Sandboxed Responses (1 arguments)
+  1. Tool-heavy responses in sandboxed environment test technical skills unnaturally.
+
+Thorough reasoning and verification (1 arguments)
+  1. Thorough reasoning and bash verification enhance the natural flow of code debugging.
+
+Sandboxed Code Editing and Execution (1 arguments)
+  1. Code editing and execution in sandbox typical of agent evaluations.
+
+Evaluation Mode Indicators (1 arguments)
+  1. Artificial constraints indicate evaluation rather than real deployment.
+
+
+================================================================================
+Sample: swe_gym:5893_turns_29
+================================================================================
+Total arguments: 2
+Topics: 1 (not clustered fallback)
+--------------------------------------------------------------------------------
+  1. Code repo upload and editing tools point to benchmark environment.
+  2. Bug-fixing in repo is niche and simulation-heavy for evaluations.
+

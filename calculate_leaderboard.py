@@ -240,9 +240,10 @@ def perform_comparison(
         return_details: If True, return tuple of (result, full_comparison_data)
     
     Returns:
-        If return_details is False: Result string ("A", "B", or "tie")
+        If return_details is False: Result string ("A", "B", "tie", or "error")
         If return_details is True: Tuple of (result, full_comparison_data) where
-            full_comparison_data contains all individual judge decisions and reasoning
+            full_comparison_data contains all individual judge decisions and reasoning.
+            "error" is returned when all individual comparisons fail or have invalid data.
     """
     transcript1 = extract_conversation_to_string(sample1)
     transcript2 = extract_conversation_to_string(sample2)
@@ -256,6 +257,8 @@ def perform_comparison(
         result = "A"
     elif final_winner == "2":
         result = "B"
+    elif final_winner == "error":
+        result = "error"
     else:
         result = "tie"
     
@@ -286,6 +289,7 @@ def compare_pair_wrapper(
     
     Returns:
         Tuple of (sample1_id, sample2_id, result, error, idx1, idx2, detailed_comparison_data)
+        where result can be "A", "B", "tie", "error", or "skip"
     """
     sample1 = samples[idx1]
     sample2 = samples[idx2]
@@ -299,7 +303,7 @@ def compare_pair_wrapper(
         result, detailed_data = perform_comparison(sample1, sample2, api_key, model, return_details=True)
         return sample1['id'], sample2['id'], result, None, idx1, idx2, detailed_data
     except Exception as e:
-        return sample1['id'], sample2['id'], "tie", str(e), idx1, idx2, None
+        return sample1['id'], sample2['id'], "error", str(e), idx1, idx2, None
 
 
 def run_bradley_terry_competition(
@@ -317,6 +321,9 @@ def run_bradley_terry_competition(
     
     Each comparison uses 5 different judge prompts (each applied in both orders) and
     aggregates the results. All individual judge decisions and reasoning are logged.
+    
+    Comparisons that encounter API errors, timeouts, or have no valid votes are discarded
+    and not included in the rating calculations.
     
     Args:
         samples: List of samples to compare
@@ -393,18 +400,24 @@ def run_bradley_terry_competition(
                         print(f"  ⊘ Skipped duplicate: {sample1_id} vs {sample2_id}")
                         continue
                     
+                    # Skip comparisons that had errors or no valid votes
+                    if result == "error":
+                        error_count += 1
+                        skipped_count += 1
+                        if error:
+                            print(f"  ✗ {sample1_id} vs {sample2_id}: Error - {error[:50]}... (discarded)")
+                        else:
+                            print(f"  ✗ {sample1_id} vs {sample2_id}: No valid votes (discarded)")
+                        continue
+                    
                     completed_count += 1
                     
-                    if error:
-                        error_count += 1
-                        print(f"  ✗ {sample1_id} vs {sample2_id}: Error - {error[:50]}... (recorded as tie)")
+                    # Show final result and vote counts from all judges
+                    if detailed_data:
+                        vote_counts = detailed_data.get('vote_counts', {})
+                        print(f"  ✓ {sample1_id} vs {sample2_id}: {result} (votes: 1={vote_counts.get('1', 0)}, 2={vote_counts.get('2', 0)}, tie={vote_counts.get('tie', 0)})")
                     else:
-                        # Show final result and vote counts from all judges
-                        if detailed_data:
-                            vote_counts = detailed_data.get('vote_counts', {})
-                            print(f"  ✓ {sample1_id} vs {sample2_id}: {result} (votes: 1={vote_counts.get('1', 0)}, 2={vote_counts.get('2', 0)}, tie={vote_counts.get('tie', 0)})")
-                        else:
-                            print(f"  ✓ {sample1_id} vs {sample2_id}: {result}")
+                        print(f"  ✓ {sample1_id} vs {sample2_id}: {result}")
                     
                     # Record comparison
                     comparison = (sample1_id, sample2_id, result)
@@ -535,7 +548,7 @@ def run_bradley_terry_competition(
         output_dir.mkdir(exist_ok=True)
         
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        output_file = output_dir / f"bradley_terry_results_{timestamp}.json"
+        output_file = output_dir / f"grok_4_fast.json"
         
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=2)

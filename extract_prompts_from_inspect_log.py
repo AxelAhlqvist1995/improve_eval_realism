@@ -62,14 +62,9 @@ def extract_prompts_minimal(log_file_path: str | Path) -> list[dict[str, Any]]:
                 if msg.role in ['system', 'user', 'assistant']:
                     text_content, reasoning_content = extract_content_parts(msg.content)
                     
-                    # Build content string (combine reasoning and text if both exist)
-                    content_parts = []
-                    if reasoning_content:
-                        content_parts.append(reasoning_content)
-                    if text_content:
-                        content_parts.append(text_content)
-                    
-                    content = '\n\n'.join(content_parts) if content_parts else None
+                    # Build content string (only use text, exclude reasoning)
+                    # Reasoning is not shown to users in real scenarios
+                    content = text_content if text_content else None
                     
                     # Build message in OpenAI format
                     message = {"role": msg.role}
