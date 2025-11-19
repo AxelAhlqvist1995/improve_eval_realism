@@ -2,6 +2,7 @@
 python-dotenv>=1.0.0
 requests>=2.31.0
 numpy>=1.24.0
+inspect-ai>=0.4.0
 
 # Machine learning and clustering
 bertopic>=0.16.0

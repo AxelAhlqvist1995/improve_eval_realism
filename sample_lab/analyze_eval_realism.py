@@ -159,7 +159,7 @@ def run_leaderboard_placement(
             theta_change = theta_after - comparison_data['theta_before']
             
             print(f"\n[{sample_id}] Comparison {comparison_num}: {result_str} vs {opponent_id} | "
-                  f"θ={theta_after:.2f} (Δ{theta_change:+.2f}), σ={sigma_after:.2f}")
+                  f"θ={theta_after:.2f} (Δ{theta_change:+.2f}), σ={sigma_after:.2f}", flush=True)
     
     # Define function to process a single sample
     def process_single_sample(sample_index_and_data):
@@ -215,7 +215,7 @@ def run_leaderboard_placement(
                 with print_lock:
                     print(f"✓ Completed {completed_count}/{len(samples)}: {result['new_sample_id']} → "
                           f"Rank #{result['leaderboard_rank']}/{result['leaderboard_total']} "
-                          f"({result['leaderboard_percentile']}th percentile)")
+                          f"({result['leaderboard_percentile']}th percentile)", flush=True)
                           
             except Exception as e:
                 sample = futures[future]
@@ -224,13 +224,13 @@ def run_leaderboard_placement(
                 failed_samples.append(sample_id)
                 
                 with print_lock:
-                    print(f"\n{'!'*80}")
-                    print(f"✗ FAILED {completed_count}/{len(samples)}: {sample_id}")
-                    print(f"Error: {type(e).__name__}: {e}")
-                    print(f"{'!'*80}")
-                    print("Traceback:")
+                    print(f"\n{'!'*80}", flush=True)
+                    print(f"✗ FAILED {completed_count}/{len(samples)}: {sample_id}", flush=True)
+                    print(f"Error: {type(e).__name__}: {e}", flush=True)
+                    print(f"{'!'*80}", flush=True)
+                    print("Traceback:", flush=True)
                     traceback.print_exc()
-                    print(f"{'!'*80}\n")
+                    print(f"{'!'*80}\n", flush=True)
     
     # Print summary
     print("\n" + "="*80)
@@ -366,7 +366,7 @@ def run_clustering_analysis(
         api_key
     )
     
-    print("\n✓ Clustering analysis complete!")
+    print("\n✓ Clustering analysis complete!", flush=True)
 
 
 def main(eval_file: str, output_name: str = None):
@@ -464,16 +464,20 @@ def main(eval_file: str, output_name: str = None):
     )
     
     # Final summary
-    print("\n" + "="*80)
-    print("ANALYSIS COMPLETE")
-    print("="*80)
-    print(f"\nAll results saved to: {output_dir}")
-    print("\nGenerated files:")
-    print(f"  1. {output_name}.json - Full leaderboard placement data")
-    print(f"  2. {output_name}_summary.txt - Human-readable placement summary")
-    print(f"  3. eval_awareness_clusters.json - Clustering analysis data")
-    print(f"  4. eval_awareness_clusters_summary.txt - Clustering summary")
-    print("="*80 + "\n")
+    print("\n" + "="*80, flush=True)
+    print("ANALYSIS COMPLETE", flush=True)
+    print("="*80, flush=True)
+    print(f"\nAll results saved to: {output_dir}", flush=True)
+    print("\nGenerated files:", flush=True)
+    print(f"  1. {output_name}.json - Full leaderboard placement data", flush=True)
+    print(f"  2. {output_name}_summary.txt - Human-readable placement summary", flush=True)
+    print(f"  3. eval_awareness_clusters.json - Clustering analysis data", flush=True)
+    print(f"  4. eval_awareness_clusters_summary.txt - Clustering summary", flush=True)
+    print("="*80 + "\n", flush=True)
+    
+    # Ensure all output is flushed before exit
+    sys.stdout.flush()
+    sys.stderr.flush()
 
 
 def cli_main():
