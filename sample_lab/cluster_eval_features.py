@@ -5,16 +5,32 @@ This script extracts short descriptions from comparison arguments and clusters t
 to identify common patterns in what makes prompts appear evaluation-like vs deployment-like.
 """
 
+import argparse
 import json
 import os
+import re
+import sys
 import time
 import numpy as np
+from collections import defaultdict
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 from datetime import datetime
 from dotenv import load_dotenv
 import requests
+from requests.exceptions import JSONDecodeError as RequestsJSONDecodeError
 from bertopic import BERTopic
+# Custom error to allow partial progress when fetching embeddings fails mid-way
+class EmbeddingAPIError(RuntimeError):
+    def __init__(
+        self,
+        message: str,
+        partial_embeddings: Optional[np.ndarray] = None,
+        processed_count: int = 0
+    ):
+        super().__init__(message)
+        self.partial_embeddings = partial_embeddings
+        self.processed_count = processed_count
 from umap import UMAP
 from hdbscan import HDBSCAN
 from sklearn.feature_extraction.text import CountVectorizer
@@ -81,19 +97,36 @@ def get_openai_embeddings(texts: List[str], api_key: str, model: str = "openai/t
             )
             response.raise_for_status()
             
-            result = response.json()
+            try:
+                result = response.json()
+            except (ValueError, RequestsJSONDecodeError) as json_err:
+                snippet = response.text[:500].strip()
+                raise EmbeddingAPIError(
+                    f"Failed to decode embeddings response for batch {batch_num}/{total_batches}: {json_err}. "
+                    f"Raw response snippet: {snippet}",
+                    partial_embeddings=np.array(all_embeddings) if all_embeddings else None,
+                    processed_count=len(all_embeddings)
+                ) from json_err
             
             # Check for error in response
             if 'error' in result:
                 print(f"\nERROR - API returned error: {result['error']}")
-                raise ValueError(f"API Error: {result['error']}")
+                raise EmbeddingAPIError(
+                    f"API Error on batch {batch_num}/{total_batches}: {result['error']}",
+                    partial_embeddings=np.array(all_embeddings) if all_embeddings else None,
+                    processed_count=len(all_embeddings)
+                )
             
             # Check if 'data' key exists
             if 'data' not in result:
                 print(f"\nERROR - Unexpected API response structure:")
                 print(f"Response keys: {list(result.keys())}")
                 print(f"Full response: {result}")
-                raise KeyError(f"'data' key not found in API response. Available keys: {list(result.keys())}")
+                raise EmbeddingAPIError(
+                    f"'data' key not found in API response for batch {batch_num}/{total_batches}.",
+                    partial_embeddings=np.array(all_embeddings) if all_embeddings else None,
+                    processed_count=len(all_embeddings)
+                )
             
             # Extract embeddings from response
             batch_embeddings = [item['embedding'] for item in result['data']]
@@ -110,10 +143,20 @@ def get_openai_embeddings(texts: List[str], api_key: str, model: str = "openai/t
             if hasattr(e, 'response') and e.response is not None:
                 print(f"Response status code: {e.response.status_code}")
                 print(f"Response content: {e.response.text}")
+            raise EmbeddingAPIError(
+                f"Request error on batch {batch_num}/{total_batches}: {e}",
+                partial_embeddings=np.array(all_embeddings) if all_embeddings else None,
+                processed_count=len(all_embeddings)
+            ) from e
+        except EmbeddingAPIError:
             raise
         except Exception as e:
             print(f"\nError processing embeddings response: {e}")
-            raise
+            raise EmbeddingAPIError(
+                f"Unexpected error on batch {batch_num}/{total_batches}: {e}",
+                partial_embeddings=np.array(all_embeddings) if all_embeddings else None,
+                processed_count=len(all_embeddings)
+            ) from e
     
     embeddings = np.array(all_embeddings)
     print(f"✓ Received all embeddings with shape: {embeddings.shape}")
@@ -205,6 +248,274 @@ def extract_eval_reasons(json_path: str) -> Tuple[List[str], Dict[str, str], Lis
     print(f"✓ Filtered {filtered_individual_results}/{total_individual_results} judge comparisons where new sample lost")
     print(f"✓ Extracted {len(short_descriptions)} evaluation-like feature descriptions")
     return short_descriptions, short_to_full, sample_ids
+
+
+def natural_sort_key(value: str) -> List[Any]:
+    """
+    Natural sort helper that keeps numeric suffix order intuitive (e.g., sample_5 before sample_11).
+    """
+    parts = re.split(r'(\d+)', value)
+    return [int(part) if part.isdigit() else part.lower() for part in parts]
+
+
+def _build_argument_entry(sample_id: str, short_desc: str, short_to_full: Dict[str, str]) -> Dict[str, str]:
+    """Create a standardized argument payload (per-sample mode doesn’t need sample_id)."""
+    return {
+        "short_description": short_desc,
+        "full_description": short_to_full.get(short_desc, "")
+    }
+
+
+def _cluster_single_sample(
+    sample_id: str,
+    sample_docs: List[str],
+    sample_embeddings: np.ndarray,
+    short_to_full: Dict[str, str],
+    api_key: str,
+    embedding_model: OpenRouterEmbeddings,
+    n_neighbors: int,
+    min_cluster_size: int,
+    min_samples: int,
+    min_df: int,
+    random_state: int
+) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Cluster arguments for a single sample, returning report data and summary lines.
+    """
+    MIN_DOCS_FOR_CLUSTERING = 3
+    doc_count = len(sample_docs)
+    summary_lines: List[str] = []
+    
+    sample_result: Dict[str, Any] = {
+        "sample_id": sample_id,
+        "total_arguments": doc_count,
+        "topics": []
+    }
+    
+    summary_lines.append("="*80)
+    summary_lines.append(f"Sample: {sample_id}")
+    summary_lines.append("="*80)
+    summary_lines.append(f"Total arguments: {doc_count}")
+    
+    if doc_count == 0:
+        sample_result["notes"] = "No evaluation-like arguments found for this sample."
+        summary_lines.append("Notes: No arguments to cluster.")
+        summary_lines.append("")
+        return sample_result, summary_lines
+    
+    if doc_count < MIN_DOCS_FOR_CLUSTERING:
+        arguments = [_build_argument_entry(sample_id, short_desc, short_to_full) for short_desc in sample_docs]
+        topic_entry = {
+            "name": "Not clustered",
+            "count": len(arguments),
+            "arguments": arguments
+        }
+        sample_result["topics"] = [topic_entry]
+        sample_result["notes"] = f"Clustering skipped: requires at least {MIN_DOCS_FOR_CLUSTERING} arguments."
+        
+        summary_lines.append(f"Topics: {len(sample_result['topics'])} (not clustered fallback)")
+        summary_lines.append("-"*80)
+        for idx, argument in enumerate(arguments[:10], 1):
+            summary_lines.append(f"  {idx}. {argument['short_description']}")
+        summary_lines.append("")
+        return sample_result, summary_lines
+    
+    # Adjust hyperparameters for the sample size
+    sample_n_neighbors = max(2, min(n_neighbors, doc_count - 1))
+    sample_min_cluster_size = max(2, min(min_cluster_size, doc_count))
+    sample_min_samples = max(1, min(min_samples, sample_min_cluster_size))
+    
+    try:
+        topic_model = create_topic_model(
+            n_neighbors=sample_n_neighbors,
+            min_cluster_size=sample_min_cluster_size,
+            min_samples=sample_min_samples,
+            min_df=min_df,
+            random_state=random_state,
+            embedding_model=embedding_model,
+            api_key=api_key
+        )
+        
+        topics, probs = fit_and_reduce_topics(topic_model, sample_docs, sample_embeddings)
+    except Exception as exc:
+        print(f"Warning: Clustering failed for {sample_id}: {exc}")
+        arguments = [_build_argument_entry(sample_id, short_desc, short_to_full) for short_desc in sample_docs]
+        sample_result["topics"] = [{
+            "name": "Not clustered",
+            "count": len(arguments),
+            "arguments": arguments
+        }]
+        sample_result["notes"] = f"Clustering skipped due to error: {exc}"
+        
+        summary_lines.append(f"Topics: {len(sample_result['topics'])} (not clustered fallback)")
+        summary_lines.append("-"*80)
+        for idx, argument in enumerate(arguments[:10], 1):
+            summary_lines.append(f"  {idx}. {argument['short_description']}")
+        summary_lines.append("")
+        return sample_result, summary_lines
+    
+    topic_freq = topic_model.get_topic_freq().sort_values(by='Count', ascending=False)
+    valid_topics = [row for _, row in topic_freq.iterrows() if row['Topic'] != -1]
+    
+    topic_entries = []
+    for row in valid_topics:
+        topic_id = row['Topic']
+        doc_indices = [i for i, t in enumerate(topics) if t == topic_id]
+        representative_docs = [sample_docs[i] for i in doc_indices[:10]]
+        
+        topic_words = topic_model.get_topic(topic_id)
+        topic_name = generate_llm_topic_label(
+            topic_id,
+            topic_words if topic_words else [],
+            representative_docs,
+            api_key
+        )
+        
+        arguments = []
+        for doc_idx in doc_indices:
+            short_desc = sample_docs[doc_idx]
+            arguments.append(_build_argument_entry(sample_id, short_desc, short_to_full))
+        
+        topic_entries.append({
+            "topic_id": int(topic_id),
+            "name": topic_name,
+            "count": len(arguments),
+            "arguments": arguments
+        })
+    
+    if not topic_entries:
+        # All points considered outliers; treat as single bucket
+        outlier_arguments = [
+            _build_argument_entry(sample_id, sample_docs[i], short_to_full)
+            for i, topic_id in enumerate(topics) if topic_id == -1
+        ]
+        topic_entries.append({
+            "topic_id": -1,
+            "name": "Outliers / Unclustered Arguments",
+            "count": len(outlier_arguments),
+            "arguments": outlier_arguments
+        })
+        sample_result["notes"] = "All arguments marked as outliers by HDBSCAN."
+    
+    outlier_count = sum(1 for topic_id in topics if topic_id == -1)
+    outlier_rate = 100 * outlier_count / doc_count if doc_count else 0.0
+    
+    sample_result["topics"] = topic_entries
+    sample_result["outlier_rate"] = outlier_rate
+    sample_result["outlier_count"] = outlier_count
+    
+    summary_lines.append(f"Topics: {len(topic_entries)}")
+    summary_lines.append(f"Outlier rate: {outlier_count}/{doc_count} ({outlier_rate:.1f}%)")
+    summary_lines.append("-"*80)
+    
+    for topic in topic_entries:
+        summary_lines.append(f"{topic['name']} ({topic['count']} arguments)")
+        for idx, argument in enumerate(topic["arguments"][:10], 1):
+            summary_lines.append(f"  {idx}. {argument['short_description']}")
+        summary_lines.append("")
+    
+    return sample_result, summary_lines
+
+
+def generate_per_sample_clusters(
+    docs: List[str],
+    embeddings: np.ndarray,
+    short_to_full: Dict[str, str],
+    sample_ids: List[str],
+    output_path: Path,
+    api_key: str,
+    n_neighbors: int,
+    min_cluster_size: int,
+    min_samples: int,
+    min_df: int,
+    random_state: int,
+    partial_info: Optional[Dict[str, Any]] = None
+) -> Dict[str, Any]:
+    """
+    Generate clustering reports for each sample individually.
+    """
+    sample_to_indices: Dict[str, List[int]] = defaultdict(list)
+    for idx, sample_id in enumerate(sample_ids):
+        sample_to_indices[sample_id].append(idx)
+    
+    sorted_sample_ids = sorted(sample_to_indices.keys(), key=natural_sort_key)
+    embedding_model = OpenRouterEmbeddings(api_key)
+    
+    report_data: Dict[str, Any] = {
+        "metadata": {
+            "timestamp": datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),
+            "total_samples": len(sorted_sample_ids),
+            "total_arguments": len(docs)
+        },
+        "samples": []
+    }
+
+    if partial_info:
+        report_data["metadata"]["partial_processing"] = partial_info
+    
+    summary_lines = [
+        "="*80,
+        "PER-SAMPLE CLUSTERS SUMMARY",
+        "="*80,
+        f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Total samples: {len(sorted_sample_ids)}",
+        f"Total arguments: {len(docs)}",
+        "="*80,
+        ""
+    ]
+
+    if partial_info:
+        summary_lines.append(
+            f"Partial processing: clustered {partial_info['processed_arguments']}/"
+            f"{partial_info['total_arguments']} arguments"
+        )
+        summary_lines.append(f"Reason: {partial_info.get('error', 'Unknown error')}")
+        summary_lines.append("="*80)
+        summary_lines.append("")
+    
+    total_topics = 0
+    
+    for sample_id in sorted_sample_ids:
+        indices = sample_to_indices[sample_id]
+        sample_docs = [docs[i] for i in indices]
+        sample_embeddings = embeddings[indices]
+        
+        sample_result, sample_summary = _cluster_single_sample(
+            sample_id=sample_id,
+            sample_docs=sample_docs,
+            sample_embeddings=sample_embeddings,
+            short_to_full=short_to_full,
+            api_key=api_key,
+            embedding_model=embedding_model,
+            n_neighbors=n_neighbors,
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            min_df=min_df,
+            random_state=random_state
+        )
+        
+        report_data["samples"].append(sample_result)
+        summary_lines.extend(sample_summary)
+        summary_lines.append("")  # Blank line between samples
+        total_topics += len(sample_result.get("topics", []))
+    
+    report_data["metadata"]["total_topics"] = total_topics
+    
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(report_data, f, indent=2)
+    
+    summary_path = output_path.parent / f"{output_path.stem}_summary.txt"
+    with open(summary_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(summary_lines))
+    
+    print(f"\n{'='*80}")
+    print("PER-SAMPLE CLUSTERING COMPLETE")
+    print(f"JSON report saved to: {output_path}")
+    print(f"Summary text saved to: {summary_path}")
+    print(f"{'='*80}")
+    
+    return report_data
 
 
 def create_topic_model(
@@ -355,7 +666,7 @@ Respond with ONLY the label, nothing else."""
     }
     
     data = {
-        "model": "openai/gpt-5-mini",
+        "model": "anthropic/claude-haiku-4.5",
         "messages": [{"role": "user", "content": prompt}]
     }
     
@@ -385,7 +696,8 @@ def generate_report(
     output_path: Path,
     short_to_full: Dict[str, str],
     sample_ids: List[str],
-    api_key: str
+    api_key: str,
+    partial_info: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
     """
     Generate comprehensive report of clustering results.
@@ -435,6 +747,8 @@ def generate_report(
         },
         "topics": []
     }
+    if partial_info:
+        report_data["metadata"]["partial_processing"] = partial_info
     
     # Get top 10 non-outlier topics
     top_topics = [row['Topic'] for _, row in topic_freq.iterrows() if row['Topic'] != -1][:10]
@@ -451,6 +765,14 @@ def generate_report(
     summary_lines.append(f"Total topics: {len(set(topics)) - (1 if -1 in topics else 0)}")
     summary_lines.append("="*80)
     summary_lines.append("")
+
+    if partial_info:
+        summary_lines.append(
+            f"Partial processing: clustered {partial_info['processed_arguments']}/"
+            f"{partial_info['total_arguments']} arguments"
+        )
+        summary_lines.append(f"Reason: {partial_info.get('error', 'Unknown error')}")
+        summary_lines.append("")
     
     for topic_id in top_topics:
         # Get top terms
@@ -478,11 +800,6 @@ def generate_report(
             for word, weight in topic_words[:10]:
                 print(f"  {word}: {weight:.4f}")
         
-        print(f"\nRepresentative Arguments (showing top 10 of {len(doc_indices)} total):")
-        for idx, doc_idx in enumerate(doc_indices[:10], 1):
-            sample_id = sample_ids[doc_idx]
-            doc = docs[doc_idx]
-            print(f"  {idx}. [{sample_id}] {doc}")
         
         # Build ALL arguments with short, full descriptions, and sample_id
         all_arguments = []
@@ -532,14 +849,16 @@ def generate_report(
     return report_data
 
 
-def main(input_file: str, output_file: str = None):
+def main(input_file: str, output_file: str = None, per_sample: bool = False):
     """
     Main function to run BERTopic clustering analysis.
     
     Args:
         input_file: Path to the explanations JSON file
         output_file: Path to save the output clusters file. If None, automatically generates
-                     the name as <input_basename>_clusters.json in the clusters/ directory
+                     <input_basename>_<timestamp>_clusters.json (or _per_sample_clusters.json when
+                     per_sample is True) inside sample_lab/clusters/
+        per_sample: If True, cluster arguments separately for each sample
     """
     # Auto-generate output file name if not provided
     if output_file is None:
@@ -547,7 +866,9 @@ def main(input_file: str, output_file: str = None):
         script_dir = Path(__file__).parent
         input_path = Path(input_file)
         input_basename = input_path.stem  # Get filename without extension
-        output_file = script_dir / "clusters" / f"{input_basename}_clusters.json"
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        suffix = "_per_sample_clusters.json" if per_sample else "_clusters.json"
+        output_file = script_dir / "clusters" / f"{input_basename}_{timestamp}{suffix}"
         print(f"Auto-generated output file: {output_file}")
     # Hyperparameters (hardcoded)
     n_neighbors = 15
@@ -573,8 +894,9 @@ def main(input_file: str, output_file: str = None):
     output_dir = output_path.parent
     output_dir.mkdir(exist_ok=True, parents=True)
     
+    mode_str = "PER-SAMPLE" if per_sample else "GLOBAL"
     print("="*80)
-    print("BERTOPIC CLUSTERING FOR EVALUATION FEATURES")
+    print(f"BERTOPIC CLUSTERING FOR EVALUATION FEATURES ({mode_str})")
     print("="*80)
     print(f"Input file: {input_file}")
     print(f"Output file: {output_file}")
@@ -592,42 +914,122 @@ def main(input_file: str, output_file: str = None):
         print("Error: No documents extracted from input file")
         return
     
-    print(f"\nTotal documents to cluster: {len(docs)}")
+    total_docs = len(docs)
+    print(f"\nTotal documents to cluster: {total_docs}")
     print(f"Total unique samples: {len(set(sample_ids))}")
     
     # Get embeddings from OpenAI via OpenRouter
-    embeddings = get_openai_embeddings(docs, api_key)
+    partial_info = None
+    try:
+        embeddings = get_openai_embeddings(docs, api_key)
+    except EmbeddingAPIError as err:
+        if not err.partial_embeddings is None and err.processed_count > 0:
+            print(
+                f"\nWARNING: Embedding generation failed after {err.processed_count}/{total_docs} documents.\n"
+                "Proceeding with the successfully processed subset."
+            )
+            docs = docs[:err.processed_count]
+            sample_ids = sample_ids[:err.processed_count]
+            embeddings = err.partial_embeddings
+            partial_info = {
+                "error": str(err),
+                "processed_arguments": err.processed_count,
+                "total_arguments": total_docs
+            }
+        else:
+            print("\n✗ Embedding generation failed before any documents were processed.")
+            raise
     
-    # Create embedding model for BERTopic
-    embedding_model = OpenRouterEmbeddings(api_key)
-    
-    # Create topic model
-    print("\nCreating topic model with LLM-based topic labeling...")
-    topic_model = create_topic_model(
-        n_neighbors=n_neighbors,
-        min_cluster_size=min_cluster_size,
-        min_samples=min_samples,
-        min_df=min_df,
-        random_state=random_state,
-        embedding_model=embedding_model,
-        api_key=api_key
-    )
-    
-    # Fit and reduce topics
-    topics, probs = fit_and_reduce_topics(topic_model, docs, embeddings)
-    
-    # Generate report with LLM-based topic labels
-    report_data = generate_report(topic_model, docs, topics, output_path, short_to_full, sample_ids, api_key)
+    if per_sample:
+        generate_per_sample_clusters(
+            docs=docs,
+            embeddings=embeddings,
+            short_to_full=short_to_full,
+            sample_ids=sample_ids,
+            output_path=output_path,
+            api_key=api_key,
+            n_neighbors=n_neighbors,
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            min_df=min_df,
+            random_state=random_state,
+            partial_info=partial_info
+        )
+    else:
+        # Create embedding model for BERTopic
+        embedding_model = OpenRouterEmbeddings(api_key)
+        
+        # Create topic model
+        print("\nCreating topic model with LLM-based topic labeling...")
+        topic_model = create_topic_model(
+            n_neighbors=n_neighbors,
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            min_df=min_df,
+            random_state=random_state,
+            embedding_model=embedding_model,
+            api_key=api_key
+        )
+        
+        # Fit and reduce topics
+        topics, probs = fit_and_reduce_topics(topic_model, docs, embeddings)
+        
+        # Generate report with LLM-based topic labels
+        generate_report(
+            topic_model,
+            docs,
+            topics,
+            output_path,
+            short_to_full,
+            sample_ids,
+            api_key,
+            partial_info=partial_info
+        )
     
     print("\n✓ Clustering analysis complete!")
 
 
-if __name__ == "__main__":
-    # Look for input in sample_lab/map_samples_on_leaderboard/
-    script_dir = Path(__file__).parent
-    input_file = script_dir / "map_samples_on_leaderboard" / "swe_gym:5893_turns_grok_4_fast.json"
+def cli_main():
+    parser = argparse.ArgumentParser(
+        description="Cluster evaluation-like arguments using BERTopic.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "input_file",
+        type=str,
+        help="Path to the explanations JSON file (e.g., map_samples_on_leaderboard/*.json)"
+    )
+    parser.add_argument(
+        "--output-file",
+        type=str,
+        default=None,
+        help="Optional path for the clusters JSON file."
+    )
+    parser.add_argument(
+        "--per-sample-clusters",
+        action="store_true",
+        help="Cluster each sample individually instead of clustering across all samples."
+    )
     
-    # Output file will be auto-generated as <input_basename>_clusters.json in sample_lab/clusters/
-    # To override, pass output_file explicitly: main(str(input_file), "custom_output.json")
-    main(str(input_file))
+    args = parser.parse_args()
+    main(args.input_file, args.output_file, per_sample=args.per_sample_clusters)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        cli_main()
+    else:
+        print("=" * 80)
+        print("RUNNING CLUSTERING")
+        print("=" * 80)
+        script_dir = Path(__file__).parent
+        default_input = script_dir / "map_samples_on_leaderboard" / "oversight_subversion_basic_model:gpt_5_mini_leaderboard:grok_4_fast.json"
+        divide_into_samples = True
+        if default_input.exists():
+            print(f"Using default input file: {default_input}")
+            main(str(default_input), per_sample=divide_into_samples)
+        else:
+            print(f"Default input file not found: {default_input}")
+            print("Provide an input path, e.g.:")
+            print("  python cluster_eval_features.py sample_lab/map_samples_on_leaderboard/your_file.json")
 

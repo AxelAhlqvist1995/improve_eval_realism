@@ -11,6 +11,7 @@ import os
 import sys
 import argparse
 import traceback
+import re
 from pathlib import Path
 from typing import Dict, Tuple, List, Any, Optional, Callable
 from datetime import datetime
@@ -24,6 +25,29 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from sample_comparison import extract_conversation_to_string, compare_transcripts_realism
 from extract_prompts_from_inspect_log import extract_prompts_minimal
 from bradley_terry import bradley_terry_mm, INITIAL_SIGMA
+
+
+def natural_sort_key(text: str) -> List:
+    """
+    Generate a sort key for natural (human-friendly) sorting.
+    
+    Converts a string into a list of mixed strings and integers so that
+    numeric parts are compared numerically rather than lexicographically.
+    
+    Example:
+        "sample_5" < "sample_11" (not "sample_11" < "sample_5")
+        "oversight_subversion:3" < "oversight_subversion:20"
+    
+    Args:
+        text: String to generate sort key for
+        
+    Returns:
+        List of alternating strings and integers for natural sorting
+    """
+    def atoi(s):
+        return int(s) if s.isdigit() else s
+    
+    return [atoi(c) for c in re.split(r'(\d+)', text)]
 
 
 def load_calibration_ratings(results_path: str = None) -> Dict[str, Tuple[float, float]]:
@@ -626,8 +650,8 @@ def save_aggregate_results(
         filename = f"integration_results_{timestamp}.json"
     output_path = output_dir / filename
     
-    # Sort results by sample_id for consistency
-    sorted_results = sorted(all_results, key=lambda r: r.get('new_sample_id', ''))
+    # Sort results by sample_id using natural sorting for consistency
+    sorted_results = sorted(all_results, key=lambda r: natural_sort_key(r.get('new_sample_id', '')))
     
     # Create aggregate structure
     aggregate = {
@@ -713,8 +737,8 @@ def save_placement_summary(
     
     txt_path = output_dir / txt_filename
     
-    # Sort by rank
-    sorted_results = sorted(all_results, key=lambda r: r['leaderboard_rank'])
+    # Sort by sample name using natural sorting (so sample_5 comes before sample_11)
+    sorted_results = sorted(all_results, key=lambda r: natural_sort_key(r.get('new_sample_id', '')))
     
     # Calculate summary statistics
     total_samples = len(all_results)
@@ -824,7 +848,7 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
             new_sample=new_sample,
             calibration_ratings=calibration_ratings,
             k_initial=32,
-            max_comparisons=15,
+            max_comparisons=14,
             uncertainty_threshold=20.0,
             api_key=api_key,
             model=model,
@@ -1076,10 +1100,10 @@ if __name__ == "__main__":
         script_dir = Path(__file__).parent.parent
         
         # Define parameters for direct execution
-        log_file = script_dir / "sample_lab" / "partial_transcripts" / "partial_transcripts_swe_gym_5893.json"
-        leaderboard_file = script_dir / "leaderboards" / "gpt_5_mini_leaderboard_v2.json"
-        model = "openai/gpt-5-mini"
-        output_name = "partial_transcripts_swe_gym_5893_gpt_5_mini_uncleaned"  
+        log_file = script_dir / "sample_lab" / "eval_logs" / "oversight_subversion_basic_gpt_5_mini.eval"
+        leaderboard_file = script_dir / "leaderboards" / "grok_4_fast.json"
+        model = "x-ai/grok-4-fast"
+        output_name = "oversight_subversion_basic_model:gpt_5_mini_leaderboard:grok_4_fast"  
         print("="*80)
         print("RUNNING IN DIRECT EXECUTION MODE")
         print("="*80)

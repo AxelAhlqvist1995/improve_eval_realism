@@ -19,6 +19,9 @@ Examples:
     
     # With custom output name
     python analyze_eval_realism.py my_eval.eval --output-name my_analysis
+    
+    # With per-sample clustering enabled
+    python analyze_eval_realism.py my_eval.eval --per-sample-clusters
 """
 
 import json
@@ -52,6 +55,8 @@ from cluster_eval_features import (
     create_topic_model,
     fit_and_reduce_topics,
     generate_report,
+    generate_per_sample_clusters,
+    EmbeddingAPIError,
     OpenRouterEmbeddings
 )
 
@@ -292,7 +297,8 @@ def run_leaderboard_placement(
 def run_clustering_analysis(
     aggregate_results_path: str,
     output_dir: Path,
-    api_key: str
+    api_key: str,
+    per_sample_clusters: bool = False
 ) -> None:
     """
     Run clustering analysis on eval awareness reasons.
@@ -301,6 +307,7 @@ def run_clustering_analysis(
         aggregate_results_path: Path to the aggregate results JSON from leaderboard placement
         output_dir: Directory to save clustering results
         api_key: OpenRouter API key
+        per_sample_clusters: If True, run clustering separately for each sample
     """
     print("\n" + "="*80)
     print("STEP 2: CLUSTERING ANALYSIS OF EVAL AWARENESS REASONS")
@@ -315,7 +322,8 @@ def run_clustering_analysis(
         print("This may happen if all samples were judged as realistic.")
         return
     
-    print(f"\nTotal arguments to cluster: {len(docs)}")
+    total_arguments = len(docs)
+    print(f"\nTotal arguments to cluster: {total_arguments}")
     print(f"Total unique samples: {len(set(sample_ids))}")
     
     # Hyperparameters for clustering
@@ -334,48 +342,82 @@ def run_clustering_analysis(
     
     # Get embeddings from OpenAI via OpenRouter
     print("\n" + "="*80)
-    embeddings = get_openai_embeddings(docs, api_key)
+    partial_info = None
+    try:
+        embeddings = get_openai_embeddings(docs, api_key)
+    except EmbeddingAPIError as err:
+        if err.partial_embeddings is None or err.processed_count == 0:
+            print("\n✗ Embedding generation failed before any arguments were processed. Aborting clustering step.")
+            return
+        print(
+            f"\nWARNING: Embedding generation failed after {err.processed_count}/{total_arguments} arguments.\n"
+            "Proceeding with the successfully processed subset."
+        )
+        docs = docs[:err.processed_count]
+        sample_ids = sample_ids[:err.processed_count]
+        embeddings = err.partial_embeddings
+        partial_info = {
+            "error": str(err),
+            "processed_arguments": err.processed_count,
+            "total_arguments": total_arguments
+        }
     
-    # Create embedding model for BERTopic
-    embedding_model = OpenRouterEmbeddings(api_key)
+    output_filename = "eval_awareness_clusters_per_sample.json" if per_sample_clusters else "eval_awareness_clusters.json"
+    output_path = output_dir / output_filename
     
-    # Create topic model
-    print("\nCreating topic model...")
-    topic_model = create_topic_model(
-        n_neighbors=n_neighbors,
-        min_cluster_size=min_cluster_size,
-        min_samples=min_samples,
-        min_df=min_df,
-        random_state=random_state,
-        embedding_model=embedding_model,
-        api_key=api_key
-    )
-    
-    # Fit and reduce topics
-    topics, probs = fit_and_reduce_topics(topic_model, docs, embeddings)
-    
-    # Generate report with LLM-based topic labels
-    output_path = output_dir / "eval_awareness_clusters.json"
-    report_data = generate_report(
-        topic_model,
-        docs,
-        topics,
-        output_path,
-        short_to_full,
-        sample_ids,
-        api_key
-    )
+    if per_sample_clusters:
+        generate_per_sample_clusters(
+            docs=docs,
+            embeddings=embeddings,
+            short_to_full=short_to_full,
+            sample_ids=sample_ids,
+            output_path=output_path,
+            api_key=api_key,
+            n_neighbors=n_neighbors,
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            min_df=min_df,
+            random_state=random_state,
+            partial_info=partial_info
+        )
+    else:
+        embedding_model = OpenRouterEmbeddings(api_key)
+        
+        print("\nCreating topic model...")
+        topic_model = create_topic_model(
+            n_neighbors=n_neighbors,
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            min_df=min_df,
+            random_state=random_state,
+            embedding_model=embedding_model,
+            api_key=api_key
+        )
+        
+        topics, probs = fit_and_reduce_topics(topic_model, docs, embeddings)
+        
+        generate_report(
+            topic_model,
+            docs,
+            topics,
+            output_path,
+            short_to_full,
+            sample_ids,
+            api_key,
+            partial_info=partial_info
+        )
     
     print("\n✓ Clustering analysis complete!", flush=True)
 
 
-def main(eval_file: str, output_name: str = None):
+def main(eval_file: str, output_name: str = None, per_sample_clusters: bool = False):
     """
     Main workflow function.
     
     Args:
         eval_file: Path to the .eval or .json file
         output_name: Optional base name for output directory
+        per_sample_clusters: If True, cluster evaluation arguments per sample
     """
     # Load environment variables from parent directory
     load_dotenv(Path(__file__).parent.parent / ".env")
@@ -460,24 +502,23 @@ def main(eval_file: str, output_name: str = None):
     run_clustering_analysis(
         aggregate_results_path=aggregate_results_path,
         output_dir=output_dir,
-        api_key=api_key
+        api_key=api_key,
+        per_sample_clusters=per_sample_clusters
     )
     
     # Final summary
-    print("\n" + "="*80, flush=True)
-    print("ANALYSIS COMPLETE", flush=True)
-    print("="*80, flush=True)
-    print(f"\nAll results saved to: {output_dir}", flush=True)
-    print("\nGenerated files:", flush=True)
-    print(f"  1. {output_name}.json - Full leaderboard placement data", flush=True)
-    print(f"  2. {output_name}_summary.txt - Human-readable placement summary", flush=True)
-    print(f"  3. eval_awareness_clusters.json - Clustering analysis data", flush=True)
-    print(f"  4. eval_awareness_clusters_summary.txt - Clustering summary", flush=True)
-    print("="*80 + "\n", flush=True)
-    
-    # Ensure all output is flushed before exit
-    sys.stdout.flush()
-    sys.stderr.flush()
+    print("\n" + "="*80)
+    print("ANALYSIS COMPLETE")
+    print("="*80)
+    print(f"\nAll results saved to: {output_dir}")
+    print("\nGenerated files:")
+    print(f"  1. {output_name}.json - Full leaderboard placement data")
+    print(f"  2. {output_name}_summary.txt - Human-readable placement summary")
+    cluster_prefix = "eval_awareness_clusters_per_sample" if per_sample_clusters else "eval_awareness_clusters"
+    mode_label = "Per-sample clustering data" if per_sample_clusters else "Global clustering data"
+    print(f"  3. {cluster_prefix}.json - {mode_label}")
+    print(f"  4. {cluster_prefix}_summary.txt - Clustering summary")
+    print("="*80 + "\n")
 
 
 def cli_main():
@@ -517,10 +558,16 @@ Results will be saved to: eval_analysis_results/<output_name>_<timestamp>/
         help='Base name for output directory (default: uses eval filename)'
     )
     
+    parser.add_argument(
+        '--per-sample-clusters',
+        action='store_true',
+        help='Cluster eval-awareness arguments per sample instead of across the dataset'
+    )
+    
     args = parser.parse_args()
     
     try:
-        main(args.eval_file, args.output_name)
+        main(args.eval_file, args.output_name, per_sample_clusters=args.per_sample_clusters)
     except Exception as e:
         print(f"\n✗ Error: {e}", file=sys.stderr)
         sys.exit(1)
