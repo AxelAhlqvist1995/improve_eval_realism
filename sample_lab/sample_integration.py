@@ -23,7 +23,7 @@ import threading
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from sample_comparison import extract_conversation_to_string, compare_transcripts_realism
-from extract_prompts_from_inspect_log import extract_prompts_minimal
+from extract_prompts_from_inspect_log import load_samples_from_file
 from bradley_terry import bradley_terry_mm, INITIAL_SIGMA
 
 
@@ -617,7 +617,8 @@ def save_aggregate_results(
     all_results: List[Dict[str, Any]],
     output_dir: str = None,
     verbose: bool = True,
-    output_name: str = None
+    output_name: str = None,
+    model: str = None
 ) -> str:
     """
     Save all individual integration results into one comprehensive aggregate file.
@@ -626,16 +627,17 @@ def save_aggregate_results(
     
     Args:
         all_results: List of all integration results (full detail)
-        output_dir: Directory to save results. If None, uses default 'map_samples_on_leaderboard' directory.
+        output_dir: Directory to save results. If None, uses default 'samples_mapped_to_leaderboard' directory.
         verbose: Whether to print confirmation message
         output_name: Optional base name for output file (without extension)
+        model: Model name used for comparisons (e.g., "x-ai/grok-4-fast")
         
     Returns:
         Path to saved aggregate results file
     """
     if output_dir is None:
         script_dir = Path(__file__).parent
-        output_dir = script_dir / "map_samples_on_leaderboard"
+        output_dir = script_dir / "samples_mapped_to_leaderboard"
     
     output_dir = Path(output_dir)
     output_dir.mkdir(exist_ok=True)
@@ -657,6 +659,7 @@ def save_aggregate_results(
     aggregate = {
         "metadata": {
             "timestamp": timestamp,
+            "model": model,
             "total_samples": len(all_results),
             "total_comparisons": sum(r['num_comparisons'] for r in all_results),
             "average_comparisons": sum(r['num_comparisons'] for r in all_results) / len(all_results) if all_results else 0,
@@ -706,22 +709,24 @@ def save_aggregate_results(
 def save_placement_summary(
     all_results: List[Dict[str, Any]],
     output_dir: str = None,
-    output_name: str = None
+    output_name: str = None,
+    model: str = None
 ) -> str:
     """
     Save a summary of all leaderboard placements (text format only).
     
     Args:
         all_results: List of all integration results
-        output_dir: Directory to save summary. If None, uses default 'map_samples_on_leaderboard' directory.
+        output_dir: Directory to save summary. If None, uses default 'samples_mapped_to_leaderboard' directory.
         output_name: Optional base name for output file (without extension)
+        model: Model name used for comparisons (e.g., "x-ai/grok-4-fast")
         
     Returns:
         Path to saved summary file
     """
     if output_dir is None:
         script_dir = Path(__file__).parent
-        output_dir = script_dir / "map_samples_on_leaderboard"
+        output_dir = script_dir / "samples_mapped_to_leaderboard"
     
     output_dir = Path(output_dir)
     output_dir.mkdir(exist_ok=True)
@@ -753,6 +758,8 @@ def save_placement_summary(
         f.write("LEADERBOARD PLACEMENT SUMMARY\n")
         f.write("="*80 + "\n")
         f.write(f"Generated: {timestamp}\n")
+        if model:
+            f.write(f"Model: {model}\n")
         f.write(f"Total samples processed: {total_samples}\n")
         f.write(f"Total comparisons: {total_comparisons}\n")
         f.write(f"Average theta: {average_theta:.2f}\n")
@@ -799,23 +806,8 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
     print("INITIALIZATION")
     print(f"{'='*80}")
     
-    # Determine if input is .eval or .json file
-    log_path = Path(log_filename)
-    if log_path.suffix.lower() == '.json':
-        print(f"Loading samples from JSON file...")
-        with open(log_path, 'r', encoding='utf-8') as f:
-            new_samples = json.load(f)
-        print(f"✓ Loaded {len(new_samples)} samples from JSON")
-    else:
-        print(f"Extracting samples from .eval file...")
-        new_samples = extract_prompts_minimal(log_filename)
-        print(f"✓ Extracted {len(new_samples)} samples from .eval log")
-    
-    # Normalize the message key: convert 'prompts' to 'input' if needed
-    # (extract_prompts_minimal uses 'prompts', but the rest of the codebase expects 'input')
-    for sample in new_samples:
-        if 'prompts' in sample and 'input' not in sample:
-            sample['input'] = sample.pop('prompts')
+    # Load samples using shared utility function
+    new_samples = load_samples_from_file(log_filename)
     
     # Load calibration ratings
     calibration_ratings = load_calibration_ratings(leaderboard_path)
@@ -968,10 +960,10 @@ def main(log_filename: str, leaderboard_path: str, model: str, output_name: str)
         print("="*80)
         
         # Save comprehensive aggregate results with all comparison details
-        save_aggregate_results(all_results, output_name=output_name)
+        save_aggregate_results(all_results, output_name=output_name, model=model)
         
         # Save placement summary
-        save_placement_summary(all_results, output_name=output_name)
+        save_placement_summary(all_results, output_name=output_name, model=model)
     else:
         print("\n⚠ Skipping detailed results and file saving due to no successful samples.")
 
@@ -1005,7 +997,7 @@ Examples:
   python sample_integration.py mylog.eval -m openai/gpt-5-mini --output my_results
   python sample_integration.py samples.json -m openai/gpt-5-mini -o my_results
   
-Note: Results are saved to the 'map_samples_on_leaderboard' directory
+Note: Results are saved to the 'samples_mapped_to_leaderboard' directory
       JSON files should contain a list of samples with 'id', 'prompts', and 'metadata' fields
         """
     )

@@ -53,6 +53,19 @@ def extract_prompts_minimal(log_file_path: str | Path) -> list[dict[str, Any]]:
     log = read_eval_log(log_file_path)
     extracted_data = []
     
+    # Get dataset name from the log
+    dataset_name = log.eval.dataset.name if hasattr(log, 'eval') and hasattr(log.eval, 'dataset') and hasattr(log.eval.dataset, 'name') else "oversight_subversion"
+    
+    # Count epochs per sample ID to determine if we need to add epoch suffix
+    sample_id_to_epochs = {}
+    for sample in log.samples:
+        sample_id = sample.id if hasattr(sample, 'id') else None
+        epoch = sample.epoch if hasattr(sample, 'epoch') else 1
+        
+        if sample_id not in sample_id_to_epochs:
+            sample_id_to_epochs[sample_id] = []
+        sample_id_to_epochs[sample_id].append(epoch)
+    
     for idx, sample in enumerate(log.samples):
         messages = []
         
@@ -118,11 +131,23 @@ def extract_prompts_minimal(log_file_path: str | Path) -> list[dict[str, Any]]:
                         }
                         messages.append(tool_response)
         
+        # Get sample ID and epoch from the sample
+        sample_id = sample.id if hasattr(sample, 'id') else idx
+        epoch = sample.epoch if hasattr(sample, 'epoch') else 1
+        
+        # Build the ID: dataset_name:sample_id or dataset_name:sample_id_epoch
+        # Only add epoch suffix if there are multiple epochs for this sample ID
+        has_multiple_epochs = len(sample_id_to_epochs.get(sample_id, [1])) > 1
+        if has_multiple_epochs:
+            id_string = f"{dataset_name}:{sample_id}_{epoch}"
+        else:
+            id_string = f"{dataset_name}:{sample_id}"
+        
         sample_data = {
-            "id": "oversight_subversion:" + str(idx),
+            "id": id_string,
             "prompts": messages,
             "metadata": {
-                "category": "oversight_subversion",
+                "category": dataset_name,
                 "eval_category": True,
                 "safety_category": True,
                 "eval_type": "alignment",
@@ -133,6 +158,96 @@ def extract_prompts_minimal(log_file_path: str | Path) -> list[dict[str, Any]]:
         extracted_data.append(sample_data)
     
     return extracted_data
+
+
+def load_samples_from_file(file_path: str | Path) -> list[dict[str, Any]]:
+    """
+    Load samples from either a .eval file or .json file.
+    
+    Handles both:
+    - .eval files: Processed through extract_prompts_minimal()
+    - Inspect AI JSON files: With "eval" and "samples" keys, extracts dataset name and handles epochs
+    - Regular JSON files: Arrays of samples in standard format
+    
+    Args:
+        file_path: Path to the input file (.eval or .json)
+        
+    Returns:
+        List of sample dictionaries with properly formatted IDs and data
+    """
+    file_path = Path(file_path)
+    
+    if file_path.suffix.lower() == '.json':
+        print(f"Loading samples from JSON file: {file_path}")
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Check if this is an Inspect AI structured JSON (with "eval" and "samples" keys)
+        if isinstance(data, dict) and 'eval' in data and 'samples' in data:
+            # Extract dataset name from eval.dataset.name
+            dataset_name = data.get('eval', {}).get('dataset', {}).get('name', 'oversight_subversion')
+            raw_samples = data['samples']
+            
+            # Count epochs per sample ID to determine if we need to add epoch suffix
+            sample_id_to_epochs = {}
+            for sample in raw_samples:
+                sample_id = sample.get('id')
+                epoch = sample.get('epoch', 1)
+                
+                if sample_id not in sample_id_to_epochs:
+                    sample_id_to_epochs[sample_id] = []
+                sample_id_to_epochs[sample_id].append(epoch)
+            
+            # Process samples to rename them with dataset name and proper epoch handling
+            samples = []
+            for sample in raw_samples:
+                sample_id = sample.get('id')
+                epoch = sample.get('epoch', 1)
+                
+                # Build the ID: dataset_name:sample_id or dataset_name:sample_id_epoch
+                # Only add epoch suffix if there are multiple epochs for this sample ID
+                has_multiple_epochs = len(sample_id_to_epochs.get(sample_id, [1])) > 1
+                if has_multiple_epochs:
+                    id_string = f"{dataset_name}:{sample_id}_{epoch}"
+                else:
+                    id_string = f"{dataset_name}:{sample_id}"
+                
+                # Create new sample with renamed ID
+                # Note: In Inspect AI JSON, 'messages' contains the full conversation,
+                # while 'input' is just the initial user input string.
+                # We need 'input' to be the messages array for extract_conversation_to_string.
+                processed_sample = {
+                    'id': id_string,
+                    'input': sample.get('messages', sample.get('input', sample.get('prompts', []))),
+                    'metadata': sample.get('metadata', {
+                        'category': dataset_name,
+                        'eval_category': True,
+                        'safety_category': True,
+                        'eval_type': 'alignment',
+                        'human_eval_probability': None
+                    })
+                }
+                
+                samples.append(processed_sample)
+            
+            print(f"✓ Loaded {len(samples)} samples from Inspect AI JSON")
+            print(f"✓ Dataset name: {dataset_name}")
+        else:
+            # Regular JSON with array of samples (already in the right format)
+            samples = data if isinstance(data, list) else [data]
+            print(f"✓ Loaded {len(samples)} samples from JSON")
+    else:
+        print(f"Extracting samples from .eval file: {file_path}")
+        samples = extract_prompts_minimal(str(file_path))
+        print(f"✓ Extracted {len(samples)} samples from .eval log")
+    
+    # Normalize the message key: convert 'prompts' to 'input' if needed
+    # (extract_prompts_minimal uses 'prompts', but the rest of the codebase expects 'input')
+    for sample in samples:
+        if 'prompts' in sample and 'input' not in sample:
+            sample['input'] = sample.pop('prompts')
+    
+    return samples
 
 
 def main():

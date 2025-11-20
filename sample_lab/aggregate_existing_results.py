@@ -1,7 +1,7 @@
 """
 Utility script to aggregate existing individual integration result files.
 
-This script scans the map_samples_on_leaderboard directory for individual result files
+This script scans the samples_mapped_to_leaderboard directory for individual result files
 and combines them into a single comprehensive aggregate file.
 """
 
@@ -123,9 +123,9 @@ def main():
     """
     Main function to aggregate existing integration result files.
     """
-    # Get map_samples_on_leaderboard directory (in sample_lab)
+    # Get samples_mapped_to_leaderboard directory (in sample_lab)
     script_dir = Path(__file__).parent
-    results_dir = script_dir / "map_samples_on_leaderboard"
+    results_dir = script_dir / "samples_mapped_to_leaderboard"
     
     if not results_dir.exists():
         print(f"❌ Error: Directory not found at {results_dir}")

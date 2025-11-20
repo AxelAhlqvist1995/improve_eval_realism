@@ -93,7 +93,7 @@ python sample_lab/sample_integration.py sample_lab/partial_transcripts/partial_t
 1. Extracts/loads samples from the input file
 2. For each sample, runs comparisons against a leaderboard
 3. Calculates leaderboard placement (rank and percentile)
-4. Saves detailed results to `sample_lab/map_samples_on_leaderboard/`:
+4. Saves detailed results to `sample_lab/samples_mapped_to_leaderboard/`:
    - `<output_name>.json`: Full comparison data with judge reasoning
    - `<output_name>_summary.txt`: Human-readable placement summary
 
@@ -144,7 +144,7 @@ For standalone clustering analysis of existing placement results:
 python sample_lab/cluster_eval_features.py
 ```
 
-By default, this processes `sample_lab/map_samples_on_leaderboard/explanations_test.json` and saves results to `sample_lab/clusters/explanations_test_clusters.json`. You can modify the input file in the script's `main()` function.
+By default, this processes `sample_lab/samples_mapped_to_leaderboard/explanations_test.json` and saves results to `sample_lab/clusters/explanations_test_clusters.json`. You can modify the input file in the script's `main()` function.
 
 **What it does:**
 1. Extracts judge arguments from comparison data where samples appeared evaluation-like
@@ -161,7 +161,48 @@ By default, this processes `sample_lab/map_samples_on_leaderboard/explanations_t
   - Useful for quick overview of evaluation patterns
 
 
-### 4. Run Sanity Checks
+### 4. Compare Evaluation Files (Dumbbell Plots)
+
+Visualize how the same samples perform across different evaluation configurations:
+
+```bash
+python sample_lab/compare_leaderboard_placements.py <file1.json> <file2.json> [file3.json ...] [options]
+```
+
+**Examples:**
+
+```bash
+# Compare two evaluations (files automatically looked up in samples_mapped_to_leaderboard/)
+python sample_lab/compare_leaderboard_placements.py eval_a.json eval_b.json
+  
+# Add custom title
+python sample_lab/compare_leaderboard_placements.py file1.json file2.json -t "Impact of Configuration Change"
+
+# You can also use full paths if files are elsewhere
+python sample_lab/compare_leaderboard_placements.py /path/to/file1.json /path/to/file2.json
+```
+
+**What it does:**
+1. Loads multiple JSON files (automatically looks in `samples_mapped_to_leaderboard/` if only filenames provided)
+2. Identifies samples with identical IDs across all files
+3. Creates a dumbbell plot showing each sample's percentile rank across evaluations
+4. Color-codes each evaluation for easy comparison
+5. Saves plot to `sample_lab/plots/eval_file_comparison/`
+
+**Options:**
+- `-o, --output`: Output filename (without extension). Defaults to timestamp.
+- `-t, --title`: Custom title for the plot
+
+**Output:**
+- `<output_name>.png`: Dumbbell plot visualization (300 DPI)
+
+**Use cases:**
+- Compare impact of system prompts or model changes
+- Track sample performance across different leaderboards
+- Identify which samples benefit most from specific configurations
+- Validate consistency of evaluation approaches
+
+### 5. Run Sanity Checks
 
 The project includes several sanity checks to validate leaderboards and rating systems.
 
@@ -207,14 +248,17 @@ Improve eval realism/
 │   ├── analyze_eval_realism.py       # ⭐ Integrated workflow (placement + clustering)
 │   ├── sample_integration.py         # Adaptive integration for new samples
 │   ├── cluster_eval_features.py      # BERTopic clustering of evaluation features
+│   ├── compare_leaderboard_placements.py  # Compare samples across multiple evaluations
 │   ├── plot_turns_vs_percentile.py   # Visualization utilities
 │   ├── create_partial_transcripts.py # Create partial transcript samples
 │   ├── aggregate_existing_results.py # Combine integration results
 │   ├── partial_transcripts/          # Processed transcript samples
-│   ├── map_samples_on_leaderboard/   # Integration results with judge reasoning
+│   ├── samples_mapped_to_leaderboard/   # Integration results with judge reasoning
 │   ├── eval_analysis_results/        # Results from analyze_eval_realism
 │   ├── clusters/                     # Topic clustering results
 │   └── plots/                        # Visualization outputs
+│       ├── eval_file_comparison/     # Dumbbell plots comparing evaluations
+│       └── ...
 │
 ├── Data Processing
 │   ├── process_needham_dataset.py    # Dataset preprocessing utilities

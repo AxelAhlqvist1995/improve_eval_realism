@@ -36,9 +36,9 @@ def load_apollo_data(file_path):
     return turns, percentiles
 
 def main():
-    # Load data (now from sample_lab/map_samples_on_leaderboard)
+    # Load data (now from sample_lab/samples_mapped_to_leaderboard)
     from pathlib import Path
-    input_file = Path(__file__).parent / 'map_samples_on_leaderboard' / 'partial_transcripts_swe_gym_5893_gpt_5_mini_uncleaned.json'
+    input_file = Path(__file__).parent / 'samples_mapped_to_leaderboard' / 'partial_transcripts_swe_gym_5893_gpt_5_mini_uncleaned.json'
     turns, percentiles = load_apollo_data(str(input_file))
     
     print(f"Loaded {len(turns)} samples from Apollo data")

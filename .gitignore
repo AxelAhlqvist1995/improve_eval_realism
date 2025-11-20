@@ -180,4 +180,6 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-eval_logs/*
+sample_lab/eval_logs/*
+
+datasets/adapted_needham_dataset.json
