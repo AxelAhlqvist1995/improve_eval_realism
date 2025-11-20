@@ -311,7 +311,7 @@ def main():
     """Run all diagnostics."""
     # Get project root directory (parent of sanity_checks/)
     script_dir = Path(__file__).parent.parent
-    results_file = script_dir / "leaderboards" / "grok_4_fast_leaderboard.json"
+    results_file = script_dir / "leaderboards" / "grok_4_fast.json"
     report_file = script_dir / "mm_convergence_diagnostics" / f"convergence_diagnostic_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt"
     
     # Create writer

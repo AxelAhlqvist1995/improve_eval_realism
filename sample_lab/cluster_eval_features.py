@@ -997,7 +997,7 @@ def cli_main():
     parser.add_argument(
         "input_file",
         type=str,
-        help="Path to the explanations JSON file (e.g., map_samples_on_leaderboard/*.json)"
+        help="Path to the explanations JSON file (e.g., samples_mapped_to_leaderboard/*.json)"
     )
     parser.add_argument(
         "--output-file",
@@ -1023,7 +1023,7 @@ if __name__ == "__main__":
         print("RUNNING CLUSTERING")
         print("=" * 80)
         script_dir = Path(__file__).parent
-        default_input = script_dir / "map_samples_on_leaderboard" / "oversight_subversion_basic_model:gpt_5_mini_leaderboard:grok_4_fast.json"
+        default_input = script_dir / "samples_mapped_to_leaderboard" / "oversight_subversion_basic_model:gpt_5_mini_leaderboard:grok_4_fast.json"
         divide_into_samples = True
         if default_input.exists():
             print(f"Using default input file: {default_input}")
@@ -1031,5 +1031,5 @@ if __name__ == "__main__":
         else:
             print(f"Default input file not found: {default_input}")
             print("Provide an input path, e.g.:")
-            print("  python cluster_eval_features.py sample_lab/map_samples_on_leaderboard/your_file.json")
+            print("  python cluster_eval_features.py sample_lab/samples_mapped_to_leaderboard/your_file.json")
 

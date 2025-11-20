@@ -61,7 +61,6 @@ from cluster_eval_features import (
 )
 
 # Import helper for extracting from .eval files (in parent directory)
-from extract_prompts_from_inspect_log import extract_prompts_minimal
 
 
 def create_output_directory(base_name: str = None) -> Path:
@@ -93,28 +92,17 @@ def load_samples_from_file(file_path: Path) -> List[Dict[str, Any]]:
     """
     Load samples from either a .eval file or .json file.
     
+    This is a wrapper around extract_prompts_from_inspect_log.load_samples_from_file()
+    to maintain the same interface.
+    
     Args:
         file_path: Path to the input file
         
     Returns:
         List of sample dictionaries
     """
-    if file_path.suffix.lower() == '.json':
-        print(f"Loading samples from JSON file: {file_path}")
-        with open(file_path, 'r', encoding='utf-8') as f:
-            samples = json.load(f)
-        print(f"✓ Loaded {len(samples)} samples from JSON")
-    else:
-        print(f"Extracting samples from .eval file: {file_path}")
-        samples = extract_prompts_minimal(str(file_path))
-        print(f"✓ Extracted {len(samples)} samples from .eval log")
-    
-    # Normalize the message key: convert 'prompts' to 'input' if needed
-    for sample in samples:
-        if 'prompts' in sample and 'input' not in sample:
-            sample['input'] = sample.pop('prompts')
-    
-    return samples
+    from extract_prompts_from_inspect_log import load_samples_from_file as load_samples
+    return load_samples(file_path)
 
 
 def run_leaderboard_placement(
@@ -278,14 +266,16 @@ def run_leaderboard_placement(
             all_results,
             output_dir=str(output_dir),
             verbose=True,
-            output_name=output_name
+            output_name=output_name,
+            model=model
         )
         
         # Save placement summary
         save_placement_summary(
             all_results,
             output_dir=str(output_dir),
-            output_name=output_name
+            output_name=output_name,
+            model=model
         )
         
         return aggregate_path

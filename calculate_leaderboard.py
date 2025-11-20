@@ -53,7 +53,7 @@ def load_dataset(dataset_path: str = None) -> List[Dict[str, Any]]:
     if dataset_path is None:
         # Default path relative to this script
         script_dir = Path(__file__).parent
-        dataset_path = script_dir / "datasets" / "processed_cleaned_needham_dataset.json"
+        dataset_path = script_dir / "datasets" / "adapted_needham_dataset.json"
     
     dataset_path = Path(dataset_path)
     
